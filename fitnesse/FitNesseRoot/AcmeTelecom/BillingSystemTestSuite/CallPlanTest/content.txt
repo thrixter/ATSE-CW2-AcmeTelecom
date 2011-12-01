@@ -6,18 +6,27 @@ Acceptance Test to check correct billing rate applied to various call plans: Sta
 #John Smith/447722113434 - Price Plan: Business
 #Jane Dixon/447799555444 - Price Plan: Leisure
 
-!3 Given
-! Customers and their Price Plans
+!*> Given
+!3 Customers and their Price Plans
 
-! Who make the following calls
-| Time | Call From | Call To | Duration | Cost? |
+!3 Who make the following calls
+*!
 
-!3 When
-! Generate bill for customers
+!*> When
+!3 Generate bill for customers
+*!
 
-!3 Then
-! Fred Bloggs' Bill
+!* Then
+!3 Call Costs
 
-! John Smith's Bill
+# Standard
+# Business
+# Leisure
 
-! Jane Dixon's Bill
+!| com.acmetelecom.BillingSystemFixture |
+| Time | !-Call From-! | !-Call To-! | !-Duration (Minutes)-! | !-Cost (£)?-! |
+| !-01/12/11 15:06-! | 447711232343 | 447711111111 | 0:59 | 0.30 |
+| !-01/12/11 15:06-! | 447722113434 | 447711111111 | 0:59 | 0.06 |
+| !-01/12/11 15:06-! | 447799555444 | 447711111111 | 0:59 | 0.09 |
+
+*!

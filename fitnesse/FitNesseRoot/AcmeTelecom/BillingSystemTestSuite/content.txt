@@ -1,7 +1,1 @@
 !contents -R2 -g -p -f -h
-
-[CallPlanTest]
-[PeakToPeakCallTest]
-[PeakToOffPeakCallTest]
-[OffPeakToPeakCallTest]
-[OffPeakToOffPeakCallTest]
