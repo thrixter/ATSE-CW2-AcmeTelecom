@@ -1,0 +1,23 @@
+!contents -R2 -g -p -f -h
+
+Acceptance Test to check correct billing rate applied to various call plans: Standard, Leisure and Business
+
+#Fred Bloggs/447711232343 - Price Plan: Standard
+#John Smith/447722113434 - Price Plan: Business
+#Jane Dixon/447799555444 - Price Plan: Leisure
+
+!3 Given
+! Customers and their Price Plans
+
+! Who make the following calls
+| Time | Call From | Call To | Duration | Cost? |
+
+!3 When
+! Generate bill for customers
+
+!3 Then
+! Fred Bloggs' Bill
+
+! John Smith's Bill
+
+! Jane Dixon's Bill
