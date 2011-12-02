@@ -9,18 +9,35 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
+/**
+ * 
+ * @author dc408, ra808, je08, jm308
+ */
 public class BillingSystem {
 
     private List<CallEvent> callLog = new ArrayList<CallEvent>();
 
+    /**
+     * 
+     * @param caller
+     * @param callee
+     */
     public void callInitiated(String caller, String callee) {
         callLog.add(new CallStart(caller, callee));
     }
 
+    /**
+     * 
+     * @param caller
+     * @param callee
+     */
     public void callCompleted(String caller, String callee) {
         callLog.add(new CallEnd(caller, callee));
     }
 
+    /**
+     * 
+     */
     public void createCustomerBills() {
         List<Customer> customers = CentralCustomerDatabase.getInstance().getCustomers();
         for (Customer customer : customers) {
@@ -29,6 +46,10 @@ public class BillingSystem {
         callLog.clear();
     }
 
+    /**
+     *
+     * @param customer
+     */
     private void createBillFor(Customer customer) {
         List<CallEvent> customerEvents = new ArrayList<CallEvent>();
         for (CallEvent callEvent : callLog) {
@@ -75,27 +96,49 @@ public class BillingSystem {
         new BillGenerator().send(customer, items, MoneyFormatter.penceToPounds(totalBill));
     }
 
+
     static class LineItem {
         private Call call;
         private BigDecimal callCost;
 
+        /**
+         *
+         * @param call
+         * @param callCost
+         */
         public LineItem(Call call, BigDecimal callCost) {
             this.call = call;
             this.callCost = callCost;
         }
 
+        /**
+         *
+         * @return
+         */
         public String date() {
             return call.date();
         }
 
+        /**
+         *
+         * @return
+         */
         public String callee() {
             return call.callee();
         }
 
+        /**
+         *
+         * @return
+         */
         public String durationMinutes() {
             return "" + call.durationSeconds() / 60 + ":" + String.format("%02d", call.durationSeconds() % 60);
         }
 
+        /**
+         *
+         * @return
+         */
         public BigDecimal cost() {
             return callCost;
         }
