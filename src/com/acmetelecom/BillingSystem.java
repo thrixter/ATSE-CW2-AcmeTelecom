@@ -23,6 +23,7 @@ public class BillingSystem {
      * @param callee
      */
     public void callInitiated(String caller, String callee) {
+        System.out.println("Call from " + caller + " to " + callee);
         callLog.add(new CallStart(caller, callee));
     }
 

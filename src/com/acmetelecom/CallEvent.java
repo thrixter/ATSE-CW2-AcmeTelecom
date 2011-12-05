@@ -16,6 +16,7 @@ public abstract class CallEvent {
      * @param timeStamp
      */
     public CallEvent(String caller, String callee, long timeStamp) {
+        System.out.println(timeStamp);
         this.caller = caller;
         this.callee = callee;
         this.time = timeStamp;
