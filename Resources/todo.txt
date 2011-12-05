@@ -1,6 +1,7 @@
 concentrate on understanding where rule is defined in existing system
 add main method and run application
 write acceptance test for existing behaviour, ensures that using latest working code base
+acceptance tests done against real database, need to use DI and mock implementation so get predictable tests
 verify requirements with user, bridge communication gap using Cucumber
 once verified existing code is actually working, can almost 'discard' those tests and create acceptance tests for new behaviour
 when is the deadline for this new regulation? assumption that is at cw submission deadline
