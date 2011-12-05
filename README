@@ -2,4 +2,4 @@ AcmeTelecom Billing System
 Ramie Al-Omari, Daniel Cooke, Jonathan Evans, Javad Moghisi
 
 Running FitNesse
-java -jar lib/fitnesse.jar -d ../fitnesse -e 1 -p 8080
+java -jar lib/fitnesse.jar -d fitnesse -e 1 -p 8080

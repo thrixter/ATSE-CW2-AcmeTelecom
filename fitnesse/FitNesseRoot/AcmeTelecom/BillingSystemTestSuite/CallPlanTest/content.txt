@@ -24,7 +24,7 @@ Acceptance Test to check correct billing rate applied to various call plans: Sta
 # Leisure
 
 !| com.acmetelecom.BillingSystemFixture |
-| Time | !-Call From-! | !-Call To-! | !-Duration (Minutes)-! | !-Cost (£)?-! |
+| time | !-call from-! | !-call to-! | !-duration-! | !-cost?-! |
 | !-01/12/11 15:06-! | 447711232343 | 447711111111 | 0:59 | 0.30 |
 | !-01/12/11 15:06-! | 447722113434 | 447711111111 | 0:59 | 0.06 |
 | !-01/12/11 15:06-! | 447799555444 | 447711111111 | 0:59 | 0.09 |

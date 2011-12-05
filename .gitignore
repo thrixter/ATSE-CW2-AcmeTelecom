@@ -11,8 +11,13 @@ out/*
 
 # FitNesse #
 ######################
+!fitnesse/
+
 fitnesse/*
-!fitnesse/FitNesseRoot/AcmeTelecom/*
+!fitnesse/FitNesseRoot/
+
+fitnesse/FitNesseRoot/*
+!fitnesse/FitNesseRoot/AcmeTelecom/
 
 # OS generated files #
 ######################
