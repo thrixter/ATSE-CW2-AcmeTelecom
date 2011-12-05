@@ -1,0 +1,51 @@
+concentrate on understanding where rule is defined in existing system
+add main method and run application
+write acceptance test for existing behaviour, ensures that using latest working code base
+verify requirements with user, bridge communication gap using Cucumber
+once verified existing code is actually working, can almost 'discard' those tests and create acceptance tests for new behaviour
+when is the deadline for this new regulation? assumption that is at cw submission deadline
+implement new rule, make sure this requirement is met first, don't throw away existing code!
+then concentrate on refactoring design for extensibility under safety of 
+
+Acceptance Tests
+	gather requirements from user
+	fit/cucumber tests
+TDD
+	introduce seams, 
+	unit tests, (EMMA code coverage)
+Object-Oriented
+	objects have roles
+	tell, don't ask
+	mock objects (mockito)
+	Ports and Adapters
+DSL?
+	domain driven
+	fluent interface
+	guide the API user
+layering (structure 101)
+	interfaces for abstractions
+	abstract server/client
+	interface segregation principle
+dependency injection (google guice)
+	handling singletons
+	frameworks?
+developing under pressure
+	iterative development
+	requirements analysis and design
+	develop a feature at a time (vertical slice)
+	extend with extra functionality (horizontal slice)
+deployment/release
+	continuous integration (jenkins)
+	continuous deployment after implementing basic requirements
+	blue/green, canary, split test, (production parallel)
+
+jbehave
+jenkins/cucumber on micro EC2 instance
+build and dependency management using buildr/gradle
+build management using or gant
+issue tracking tools e.g. JIRA
+adding a UI or designing bills e.g. balsamiq mockups
+
+different way of showing the bill/receipt
+rules could change in the future
+negative time?? use JodaTime
