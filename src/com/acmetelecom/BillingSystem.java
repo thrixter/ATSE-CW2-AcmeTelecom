@@ -23,7 +23,6 @@ public class BillingSystem {
      * @param callee
      */
     public void callInitiated(String caller, String callee) {
-        System.out.println("Call from " + caller + " to " + callee);
         callLog.add(new CallStart(caller, callee));
     }
 
@@ -40,6 +39,7 @@ public class BillingSystem {
      * 
      */
     public void createCustomerBills() {
+        // todo: can't inject customers, needed for tests
         List<Customer> customers = CentralCustomerDatabase.getInstance().getCustomers();
         for (Customer customer : customers) {
             createBillFor(customer);
@@ -62,6 +62,7 @@ public class BillingSystem {
         List<Call> calls = new ArrayList<Call>();
 
         CallEvent start = null;
+        // todo: remove instanceof checks for CallStart and CallEnd
         for (CallEvent event : customerEvents) {
             if (event instanceof CallStart) {
                 start = event;
@@ -77,6 +78,7 @@ public class BillingSystem {
 
         for (Call call : calls) {
 
+            // todo: can't inject tarriffs, needed for tests
             Tariff tariff = CentralTariffDatabase.getInstance().tarriffFor(customer);
 
             BigDecimal cost;
@@ -93,7 +95,9 @@ public class BillingSystem {
             totalBill = totalBill.add(callCost);
             items.add(new LineItem(call, callCost));
         }
+        // todo: pull all the above into a method so can sense line items given some calls
 
+        // todo: need a fitnesse test for checking bill format
         new BillGenerator().send(customer, items, MoneyFormatter.penceToPounds(totalBill));
     }
 
