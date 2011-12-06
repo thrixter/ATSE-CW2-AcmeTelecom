@@ -1,0 +1,55 @@
+configurations {
+    emma
+}
+
+dependencies {
+    emma "emma:emma:2.1.5320"
+    emma "emma:emma_ant:2.1.5320"
+}
+
+tmpDir = new File(buildDir, "tmp")
+
+emmaReportDirName    = "emma"
+emmaReportDir        = new File(reportsDir, emmaReportDirName)
+emmaTmpDirName       = "emma"
+emmaTmpDir           = new File(tmpDir, emmaTmpDirName)
+emmaInstrDirName     = "instr"
+emmaInstrDir         = new File(emmaTmpDir, emmaInstrDirName)
+emmaMetaDataFileName = "metadata.em"
+emmaMetaDataFile     = new File(emmaTmpDir, emmaMetaDataFileName)
+
+test{
+
+    jvmArgs "-Demma.coverage.out.file=${emmaMetaDataFile}",
+            "-Demma.coverage.out.merge=true",
+            "-Demma.rt.control=false"
+
+    doFirst {
+        ant.taskdef(resource: "emma_ant.properties",
+                   classpath: configurations.emma.asPath)
+
+        ant.emma {
+            instr(instrpath: "${sourceSets.main.classesDir}",
+                    destdir: "${emmaInstrDir}",
+               metadatafile: "${emmaMetaDataFile}",
+                      merge: "true")
+        }
+
+        classpath = files(emmaInstrDir) + configurations.emma + classpath
+    }
+
+    doLast {
+        ant.emma {
+            report {
+                infileset(file: "${emmaMetaDataFile}")
+                sourcepath {
+                    sourceSets.main.java.srcDirs.each { pathelement(location: "${it}") }
+                }
+
+                 txt(outfile: "${emmaReportDir}/coverage.txt")
+                html(outfile: "${emmaReportDir}/coverage.html")
+                 xml(outfile: "${emmaReportDir}/coverage.xml")
+            }
+        }
+    }
+}
