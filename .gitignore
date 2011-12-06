@@ -5,9 +5,14 @@
 *.iws
 .idea/
 
+# Gradle #
+######################
+.gradle/
+.gradletasknamecache
+
 # Binary files #
 ######################
-out/*
+build/*
 
 # FitNesse #
 ######################

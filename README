@@ -1,5 +1,37 @@
 AcmeTelecom Billing System
 Ramie Al-Omari, Daniel Cooke, Jonathan Evans, Javad Moghisi
 
+IntelliJ
+--------
+Install gradle
+Install the gradle plugin in Intellij, set GRADLE_HOME in preference->gradle and restart. On osx with homebrew GRADlE_HOME should look like /usr/local/Cellar/gradle/1.0-milestone-5/libexec
+Generate IntelliJ files ./gradlew cleanidea idea
+Open the newly generated files in IntelliJ
+Go to the gradle plugin tab (if its not there check the plugin is installed, GRADLE_HOME is set correctly and try restarting again)
+Press on refresh to refresh the project / task list
+Double click a task to run it
+
+Command Line
+------------
+
+If you have gradle installed:
+gradle <task>
+
+If you dont have gradle installed (e.g. on doc machines)
+Linux/OSX: ./gradlew <task>
+Windows: gradlew.bat <task>
+
+e.g.
+
+List tasks:
+gradle tasks
+
+Build:
+gradle build
+
+Run:
+gradle run
+
+
 Running FitNesse
 java -jar lib/fitnesse.jar -d fitnesse -e 1 -p 8080
