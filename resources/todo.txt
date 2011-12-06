@@ -72,3 +72,7 @@ still using existing peak off-peak function
 order calls by start time then duration on the bill!
 acceptance tests across call plans use the same call times (control/fairness/clearness)
 query table for call costs, split per customer
+
+wrote a nearly end-to-end FitNesse test
+had to redirect System.out!
+broke up createBillForCustomer in two
