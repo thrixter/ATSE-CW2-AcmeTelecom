@@ -10,6 +10,7 @@ public class CallChargeTest {
 
     @Test
     public void testBillingSystem() {
-        
+        BillingSystem billingSystem = new BillingSystem();
+        assert(true);
     }
 }
