@@ -1,3 +1,8 @@
 !contents
 
+!define TEST_SYSTEM {fit} 
+
+!path ../lib/external.jar
+!path ../lib/fitnesse.jar
+!path ../build/classes/main
 !path ../build/classes/test

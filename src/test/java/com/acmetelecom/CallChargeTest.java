@@ -6,7 +6,7 @@ import org.junit.Test;
  * User: javad
  * Date: 06/12/2011
  */
-public class BillingSystemTest {
+public class CallChargeTest {
 
     @Test
     public void testBillingSystem() {

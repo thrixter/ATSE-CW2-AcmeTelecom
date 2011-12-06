@@ -14,6 +14,6 @@ public class CallEnd extends CallEvent {
      */
     public CallEnd(String caller, String callee) {
         // todo: inject call end time
-        super(caller, callee, Timestamp.valueOf("2011-11-11 11:30:00").getTime()); //System.currentTimeMillis());
+        super(caller, callee, Timestamp.valueOf("2011-11-11 08:01:00").getTime()); //System.currentTimeMillis());
     }
 }

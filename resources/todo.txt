@@ -54,3 +54,14 @@ adding a UI or designing bills e.g. balsamiq mockups
 different way of showing the bill/receipt
 rules could change in the future
 negative time?? use JodaTime
+
+
+off-peak charges (pence/minute):
+standard: 0.12
+business: 0.18
+leisure: 0.06
+
+peak charges (pence/minute):
+standard: 0.30
+business: 0.18
+leisure: 0.48

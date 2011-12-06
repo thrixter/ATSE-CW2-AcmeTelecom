@@ -14,6 +14,6 @@ public class CallStart extends CallEvent {
      */
     public CallStart(String caller, String callee) {
         // todo: inject call start time
-        super(caller, callee, Timestamp.valueOf("2011-11-11 11:11:00").getTime());//System.currentTimeMillis());
+        super(caller, callee, Timestamp.valueOf("2011-11-11 08:00:00").getTime());//System.currentTimeMillis());
     }
 }
