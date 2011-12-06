@@ -1,0 +1,34 @@
+!contents
+
+#!define COMMAND_PATTERN {java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -cp %p %m}
+
+!3 Acceptance Test to check correct billing rate applied to off-peak calls on the business price plans
+
+!* Given
+| '''Customers with the following price plans''' |
+| !-Name-! | !-Number-! | !-Price Plan-! |
+| !-John Smith-! | !-447722113434-! | !-Business-! |
+| !-Jane Dixon-! | !-447799555444-! | !-Leisure-! |
+| !-Anne Jones-! | !-447777765432-! | !-Standard-! |
+
+| '''Who make the following calls''' |
+| !-From-! | !-To-! | !-Start Time-! | !-End Time-! |
+| !-Jane Dixon-! | !-Anne Jones-! | !-2011-11-29 05:00-! | !-2011-11-29 11:45-! |
+| !-Jane Dixon-! | !-John Smith-! | !-2011-11-29 06:00-! | !-2011-11-29 23:30-! |
+| !-Jane Dixon-! | !-John Smith-! | !-2011-11-29 18:00-! | !-2011-11-29 20:30-! |
+| !-Jane Dixon-! | !-Anne Jones-! | !-2011-11-29 18:30-! | !-2011-11-30 07:30-! |
+*!
+
+!* When
+| '''Generate bill for customers''' |
+*!
+
+!* Then
+| '''The Bill Shows''' |
+| !-Caller Name-! | !-Caller Number-! | !-Price Plan-! | !-Called Number-! | !-Call Time-! | !-Duration-! | !-Cost-! |
+| !-Jane Dixon-! | !-447799555444-! | !-Business-! | !-447777765432-! | !-2011-11-29 05:00-! | !-6:45-! | !--! |
+| !-Jane Dixon-! | !-447799555444-! | !-Business-! | !-447722113434-! | !-2011-11-29 06:00-! | !-17:30-! | !--! |
+| !-Jane Dixon-! | !-447799555444-! | !-Business-! | !-447722113434-! | !-2011-11-29 18:00-! | !-2:30-! | !--! |
+| !-Jane Dixon-! | !-447799555444-! | !-Business-! | !-447777765432-! | !-2011-11-29 18:30-! | !-13:00-! | !--! |
+
+*!

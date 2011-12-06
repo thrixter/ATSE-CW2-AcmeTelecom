@@ -1,0 +1,7 @@
+!contents
+
+| '''Customers with the following price plans''' |
+| !-Name-! | !-Number-! | !-Price Plan-! |
+| !-John Smith-! | !-447722113434-! | !-Business-! |
+| !-Jane Dixon-! | !-447799555444-! | !-Leisure-! |
+| !-Anne Jones-! | !-447777765432-! | !-Standard-! |
