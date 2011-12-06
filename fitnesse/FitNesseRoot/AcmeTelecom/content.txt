@@ -1,3 +1,3 @@
-!contents -R2 -g -p -f -h
+!contents
 
-!path ../out/test/AcmeTelecom
+!path ../build/classes/test
