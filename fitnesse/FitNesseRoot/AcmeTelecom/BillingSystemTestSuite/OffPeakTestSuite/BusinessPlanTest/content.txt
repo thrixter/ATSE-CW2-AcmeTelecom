@@ -1,0 +1,24 @@
+!contents
+
+#!define COMMAND_PATTERN {java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -cp %p %m}
+
+!3 Acceptance Test to check correct billing rate applied to off-peak calls on the business price plans
+
+!* Given
+!include .AcmeTelecom.BillingSystemDataSet.CustomerDataSet
+
+| '''Who make the following calls''' |
+| !-From-! | !-To-! | !-Start Time-! | !-End Time-! |
+| !-John Smith-! | !-Jane Dixon-! | !-2011-11-29 23:30-! | !-2011-11-30 01:00-! |
+*!
+
+!* When
+| '''Generate bill for customers''' |
+*!
+
+!* Then
+| '''The Bill Shows''' |
+| !-Caller Name-! | !-Caller Number-! | !-Price Plan-! | !-Called Number-! | !-Call Time-! | !-Duration-! | !-Cost-! |
+| !-John Smith-! | !-447722113434-! | !-Business-! | !-447799555444-! | !-2011-11-29 23:30-! | !-1:30-! | !-16.20-! |
+
+*!

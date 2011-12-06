@@ -65,3 +65,10 @@ peak charges (pence/minute):
 standard: 0.30
 business: 0.18
 leisure: 0.48
+
+bill shows how portion of call was charged
+from 7th hour onwards changes tariff
+still using existing peak off-peak function
+order calls by start time then duration on the bill!
+acceptance tests across call plans use the same call times (control/fairness/clearness)
+query table for call costs, split per customer

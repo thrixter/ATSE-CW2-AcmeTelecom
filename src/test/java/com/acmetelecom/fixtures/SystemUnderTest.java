@@ -1,4 +1,6 @@
-package com.acmetelecom;
+package com.acmetelecom.fixtures;
+
+import com.acmetelecom.BillingSystem;
 
 /**
  * User: javad
