@@ -94,7 +94,8 @@ separate out BillCalculator
 tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
 add Fixed (old requirements) and Variable (new requirements) calculator
 refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
-billgenerator not ordered, check requirements with user, also inject printer in
+billgenerator not ordered, check requirements with user
+integration test for BillGenerator used HtmlPrinter, again redirect sysout, refactored to inject dependency, removed the totalCost argument
 Customer builder with tinytypes for firstname, lastname, number
 CallEvent builder with tinytypes
 
