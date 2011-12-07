@@ -27,21 +27,22 @@ import static org.mockito.Mockito.when;
 public class BillingSystemTest {
 
     BillingSystem billingSystem;
+
     CallLogger callLogger;
+    BillCalculator billCalculator;
 
     Customer anne, john;
     Tariff tariff = Tariff.Business;
 
     @Mock CustomerDatabase customerDatabase;
     @Mock TariffLibrary tariffDatabase;
-    @Mock
-    BillGenerator billGenerator;
+    @Mock BillGenerator billGenerator;
 
     @Before
     public void setUpCustomers() {
-        // todo: Customer factory with TinyTypes
         MockitoAnnotations.initMocks(this);
-        
+
+        // todo: Customer factory with TinyTypes
         john = new Customer("John Smith", "447722113434", "Business");
         anne = new Customer("Anne Jones", "447777765432", "Leisure");
 
@@ -49,7 +50,9 @@ public class BillingSystemTest {
         when(tariffDatabase.tarriffFor(john)).thenReturn(tariff);
 
         callLogger = new SyncCallLogger();
-        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
+        billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
+
+        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
     }
 
     @Test
@@ -69,7 +72,7 @@ public class BillingSystemTest {
                         BigDecimal.valueOf(18))
         );
 
-        verify(billGenerator).send(john, lineItems, "0.18");
+        verify(billGenerator).send(john, lineItems);
     }
 
 }

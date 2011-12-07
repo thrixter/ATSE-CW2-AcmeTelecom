@@ -82,7 +82,7 @@ introduced seam, changed so that call time could be injected into call event, ab
 gets tariff for each customer inside call loop, inefficient, call it from outside
 injected billgenerator
 created new test using mocking of billgenerator, customerdb, tarifflib
-todo: billgenerator does not need string totalBill as lineitems has this already!
+billgenerator does not need string totalBill as lineitems has this already! move calc total bill to billgenerator
 still use callinit and call complete, still with fixed times
 but needed to add equals and hashcode to lineitem, call, callevent for verifying billgen send, also better than comparing primitives
 added tests for equals in lineitem, call, callevent
@@ -93,6 +93,8 @@ callLogger injected into BillingSystem, e.g. can have async call logger
 separate out BillCalculator
 tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
 add Fixed (old requirements) and Variable (new requirements) calculator
+peakperiod logic unchanged, injected into calculator
+// todo: BillCalculator use setter injection and default to variable rate!
 refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
 billgenerator not ordered, check requirements with user
 integration test for BillGenerator used HtmlPrinter, again redirect sysout, refactored to inject dependency, removed the totalCost argument
@@ -106,4 +108,4 @@ ports and adapters, especially around the customer and tariff db!!
 CallEvent map?
 
 
-for DSLs we used joda time, hamcrest, our own, suggest one for query CallLogger
+for DSLs we used mockito, joda time, hamcrest, our own, suggest one for query CallLogger

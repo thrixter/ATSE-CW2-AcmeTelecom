@@ -2,6 +2,7 @@ package com.acmetelecom.printing;
 
 import com.acmetelecom.customer.Customer;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -10,20 +11,35 @@ import java.util.List;
  */
 public class UnorderedBillGenerator implements BillGenerator {
 
+    private Printer printer;
+
+    public UnorderedBillGenerator(Printer printer) {
+        this.printer = printer;
+    }
+
     /**
      *
      * @param customer
      * @param calls
-     * @param totalBill
      */
-    public void send(Customer customer, List<? extends LineItem> calls, String totalBill) {
+    public void send(Customer customer, List<? extends LineItem> calls) {
 
-        Printer printer = HtmlPrinter.getInstance();
-        printer.printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
+        this.printer.printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
         for (LineItem call : calls) {
-            printer.printItem(call.date(), call.callee(), call.durationMinutes(), MoneyFormatter.penceToPounds(call.cost()));
+            this.printer.printItem(call.date(), call.callee(), call.durationMinutes(), MoneyFormatter.penceToPounds(call.cost()));
         }
-        printer.printTotal(totalBill);
+        String totalBill = MoneyFormatter.penceToPounds(calculateTotalBill(calls));
+        this.printer.printTotal(totalBill);
+    }
+
+    private BigDecimal calculateTotalBill(List<? extends LineItem> items) {
+        BigDecimal totalBill = new BigDecimal(0);
+
+        for (LineItem lineItem : items) {
+            totalBill = totalBill.add(lineItem.cost());
+        }
+
+        return totalBill;
     }
 
 }

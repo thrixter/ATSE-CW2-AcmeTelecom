@@ -7,6 +7,7 @@ import com.acmetelecom.customer.CentralTariffDatabase;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.TariffLibrary;
 import com.acmetelecom.printing.BillGenerator;
+import com.acmetelecom.printing.HtmlPrinter;
 import com.acmetelecom.printing.UnorderedBillGenerator;
 import org.junit.Test;
 
@@ -24,12 +25,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class BillingSystemIntegrationTest {
 
-    CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
-    TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
-    BillGenerator billGenerator = new UnorderedBillGenerator();
-    CallLogger callLogger = new SyncCallLogger();
+    private CallLogger callLogger = new SyncCallLogger();
+    private CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
+    private TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
+    private BillCalculator billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
+    private BillGenerator billGenerator = new UnorderedBillGenerator(HtmlPrinter.getInstance());
 
-    BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
+    BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
 
     @Test
     public void testBillingSystem() {

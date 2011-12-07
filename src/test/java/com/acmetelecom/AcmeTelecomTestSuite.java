@@ -8,6 +8,7 @@ import com.acmetelecom.calling.CallEndTest;
 import com.acmetelecom.calling.CallStartTest;
 import com.acmetelecom.calling.CallTest;
 import com.acmetelecom.calling.SyncCallLoggerTest;
+import com.acmetelecom.printing.UnorderedBillGeneratorTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -24,6 +25,7 @@ import org.junit.runners.Suite;
         BillItemTest.class,
         CallTest.class,
         CallStartTest.class,
-        CallEndTest.class
+        CallEndTest.class,
+        UnorderedBillGeneratorTest.class
 })
 public class AcmeTelecomTestSuite {}

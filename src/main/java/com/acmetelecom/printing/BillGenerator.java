@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface BillGenerator {
 
-    public void send(Customer customer, List<? extends LineItem> calls, String totalBill);
+    public void send(Customer customer, List<? extends LineItem> calls);
     
 }

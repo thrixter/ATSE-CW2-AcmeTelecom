@@ -4,7 +4,7 @@ package com.acmetelecom.printing;
  *
  * @author dc408, ra808, je08, jm308
  */
-class HtmlPrinter implements Printer {
+public class HtmlPrinter implements Printer {
 
     private static Printer instance = new HtmlPrinter();
 
