@@ -15,5 +15,5 @@ public interface CallLogger {
 
     void clear();
 
-    List<Call> getCalls(Customer customer);
+    List<Call> getCallsFor(Customer customer);
 }

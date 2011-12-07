@@ -32,11 +32,11 @@ public class SyncCallLoggerTest {
         callLog.callInitiated(callerNumber, calleeNumber, Timestamp.valueOf("2011-11-11 06:50:00").getTime());
         callLog.callCompleted(callerNumber, calleeNumber, Timestamp.valueOf("2011-11-11 07:00:00").getTime());
 
-        List<Call> calls = callLog.getCalls(caller);
+        List<Call> calls = callLog.getCallsFor(caller);
         assertTrue(calls.size() == 1);
     }
 
-    /*@Test
+    @Test
     public void testMultipleCallsBySameCallerAreNotRecorded() {
         String firstCalleeNumber = "2";
         String secondCalleeNumber = "3";
@@ -47,9 +47,9 @@ public class SyncCallLoggerTest {
         callLog.callCompleted(callerNumber, firstCalleeNumber, Timestamp.valueOf("2011-11-11 07:00:00").getTime());
         callLog.callCompleted(callerNumber, secondCalleeNumber, Timestamp.valueOf("2011-11-11 07:10:00").getTime());
 
-        List<Call> calls = callLog.getCalls(caller);
+        List<Call> calls = callLog.getCallsFor(caller);
         assertTrue(calls.size() == 1);
-    }*/
+    }
 
     @Test
     public void testClear() {
@@ -59,11 +59,11 @@ public class SyncCallLoggerTest {
         callLog.callInitiated(callerNumber, calleeNumber, Timestamp.valueOf("2011-11-11 06:50:00").getTime());
         callLog.callCompleted(callerNumber, calleeNumber, Timestamp.valueOf("2011-11-11 07:00:00").getTime());
 
-        calls = callLog.getCalls(caller);
+        calls = callLog.getCallsFor(caller);
         assertTrue(calls.size() == 1);
         callLog.clear();
 
-        calls = callLog.getCalls(caller);
+        calls = callLog.getCallsFor(caller);
         assertTrue(calls.size() == 0);
     }
 

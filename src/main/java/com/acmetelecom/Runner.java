@@ -20,16 +20,18 @@ public class Runner {
         TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
         BillGenerator billGenerator = new HTMLBillGenerator();
 
-        BillingSystem billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
-        billingSystem.callInitiated("447722113434", "447766814143");
+        CallLogger callLogger = new SyncCallLogger();
+        callLogger.callInitiated("447722113434", "447766814143", System.currentTimeMillis());
         sleepSeconds(20);
-        billingSystem.callCompleted("447722113434", "447766814143");
-        billingSystem.callInitiated("447722113434", "447711111111");
+        callLogger.callCompleted("447722113434", "447766814143", System.currentTimeMillis());
+        callLogger.callInitiated("447722113434", "447711111111", System.currentTimeMillis());
         sleepSeconds(30);
-        billingSystem.callCompleted("447722113434", "447711111111");
-        billingSystem.callInitiated("447777765432", "447711111111");
+        callLogger.callCompleted("447722113434", "447711111111", System.currentTimeMillis());
+        callLogger.callInitiated("447777765432", "447711111111", System.currentTimeMillis());
         sleepSeconds(60);
-        billingSystem.callCompleted("447777765432", "447711111111");
+        callLogger.callCompleted("447777765432", "447711111111", System.currentTimeMillis());
+
+        BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
         billingSystem.createCustomerBills();
     }
 

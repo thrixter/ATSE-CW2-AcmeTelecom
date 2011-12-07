@@ -29,7 +29,7 @@ public class SyncCallLogger implements CallLogger {
         callLog.clear();
     }
 
-    public List<Call> getCalls(Customer customer) {
+    public List<Call> getCallsFor(Customer customer) {
         List<CallEvent> customerEvents = new ArrayList<CallEvent>();
         for (CallEvent callEvent : callLog) {
             if (callEvent.getCaller().equals(customer.getPhoneNumber())) {

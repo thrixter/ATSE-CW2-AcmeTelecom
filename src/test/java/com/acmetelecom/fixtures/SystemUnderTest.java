@@ -1,8 +1,6 @@
 package com.acmetelecom.fixtures;
 
-import com.acmetelecom.BillGenerator;
-import com.acmetelecom.BillingSystem;
-import com.acmetelecom.HTMLBillGenerator;
+import com.acmetelecom.*;
 import com.acmetelecom.customer.CentralCustomerDatabase;
 import com.acmetelecom.customer.CentralTariffDatabase;
 import com.acmetelecom.customer.CustomerDatabase;
@@ -24,8 +22,9 @@ public class SystemUnderTest {
         CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
         TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
         BillGenerator billGenerator = new HTMLBillGenerator();
-
-        billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
+        CallLogger callLogger = new SyncCallLogger();
+        
+        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
     }
 
 }

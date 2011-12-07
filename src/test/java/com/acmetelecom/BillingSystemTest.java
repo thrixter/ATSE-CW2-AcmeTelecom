@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.when;
 public class BillingSystemTest {
 
     BillingSystem billingSystem;
+    CallLogger callLogger;
 
     Customer anne, john;
     Tariff tariff = Tariff.Business;
@@ -42,15 +44,16 @@ public class BillingSystemTest {
         when(customerDatabase.getCustomers()).thenReturn(Arrays.asList(john));
         when(tariffDatabase.tarriffFor(john)).thenReturn(tariff);
 
-        billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
+        callLogger = new SyncCallLogger();
+        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
     }
 
     @Test
     public void testCustomerBillIsGeneratedForACall() {
 
         // todo: CallLogger with TinyTypes
-        billingSystem.callInitiated("447722113434", "447777765432");
-        billingSystem.callCompleted("447722113434", "447777765432");
+        callLogger.callInitiated("447722113434", "447777765432", Timestamp.valueOf("2011-11-29 15:00:00").getTime());
+        callLogger.callCompleted("447722113434", "447777765432", Timestamp.valueOf("2011-11-29 15:01:00").getTime());
 
         billingSystem.createCustomerBills();
 

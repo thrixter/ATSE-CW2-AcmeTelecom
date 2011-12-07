@@ -12,36 +12,19 @@ import java.util.*;
  */
 public class BillingSystem {
 
-    private List<CallEvent> callLog = new ArrayList<CallEvent>();
-
+    private CallLogger callLogger;
     private BillGenerator billGenerator;
     private CustomerDatabase customerDatabase;
     private TariffLibrary tariffDatabase;
 
-    public BillingSystem(CustomerDatabase customerDatabase,
+    public BillingSystem(CallLogger callLogger,
+                         CustomerDatabase customerDatabase,
                          TariffLibrary tariffDatabase,
                          BillGenerator billGenerator) {
+        this.callLogger = callLogger;
         this.billGenerator = billGenerator;
         this.customerDatabase = customerDatabase;
         this.tariffDatabase = tariffDatabase;
-    }
-
-    /**
-     * 
-     * @param caller
-     * @param callee
-     */
-    public void callInitiated(String caller, String callee) {
-        callLog.add(new CallStart(caller, callee));
-    }
-
-    /**
-     * 
-     * @param caller
-     * @param callee
-     */
-    public void callCompleted(String caller, String callee) {
-        callLog.add(new CallEnd(caller, callee));
     }
 
     /**
@@ -52,7 +35,7 @@ public class BillingSystem {
         for (Customer customer : customers) {
             createBillFor(customer);
         }
-        callLog.clear();
+        callLogger.clear();
     }
 
     /**
@@ -60,7 +43,7 @@ public class BillingSystem {
      * @param customer
      */
     private void createBillFor(Customer customer) {
-        List<Call> calls = getCallsFor(customer);
+        List<Call> calls = callLogger.getCallsFor(customer);
 
         Tariff tariff = tariffDatabase.tarriffFor(customer);
 
@@ -71,35 +54,10 @@ public class BillingSystem {
         billGenerator.send(customer, items, MoneyFormatter.penceToPounds(totalBill));
     }
 
-    private List<Call> getCallsFor(Customer customer) {
-        List<CallEvent> customerEvents = new ArrayList<CallEvent>();
-        for (CallEvent callEvent : callLog) {
-            if (callEvent.getCaller().equals(customer.getPhoneNumber())) {
-                customerEvents.add(callEvent);
-            }
-        }
-
-        List<Call> calls = new ArrayList<Call>();
-
-        CallEvent start = null;
-        // todo: remove instanceof checks for CallStart and CallEnd
-        for (CallEvent event : customerEvents) {
-            if (event instanceof CallStart) {
-                start = event;
-            }
-            if (event instanceof CallEnd && start != null) {
-                calls.add(new Call(start, event));
-                start = null;
-            }
-        }
-        return calls;
-    }
-
     private List<LineItem> calculateCostOf(List<Call> calls, Tariff tariff) {
         List<LineItem> items = new ArrayList<LineItem>();
 
         for (Call call : calls) {
-
             BigDecimal callCost = calculateCostOf(call, tariff);
             items.add(new LineItem(call, callCost));
         }
