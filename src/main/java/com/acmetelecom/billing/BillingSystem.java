@@ -44,7 +44,6 @@ public class BillingSystem {
         for (Customer customer : customers) {
             createBillFor(customer);
         }
-        callLogger.clear();
     }
 
     /**
