@@ -1,0 +1,270 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[cm]{fullpage}
+\usepackage{comment}
+\usepackage{graphicx}
+
+%opening
+\title{475 - Advanced Topics in Software Engineering \\ Acme Telecom}
+\author{Ramie Al-Omari \texttt{ra808}, Dan Cooke \texttt{dc408}, Jonathan Evans \texttt{je08}, Javad Moghisi \texttt{jm308}}
+
+\begin{document}
+\maketitle
+
+Our client requested a minor modification to a simple, but vital mobile phone customer billing system; the current charging criteria charges customers peak rate for the entire duration of their call if any part of the call falls within a peak period. New regulations stipulate calls must be charged at peak rate only for the time spent within a peak period. This report examines our approaches and techniques used to safely modify and enhance the existing legacy codebase.
+
+We quickly learned there was no documentation present (formal, tests or code comments). This presented us with a major problem; an unknown existing system specification. The requirements specified that other than the stipulated modification, all other functionality should remain unchanged. Clearly the existing functionality would need to be accurately specified to ensure this condition is met. Thus our first goal was to develop a clear specification of the existing system, to allow us to safely refactor the codebase.
+
+We began by implementing a Runner class with a main method to exercise various functionality within the system. The initial workload was split between the group into writing acceptance tests using the FitNesse framework, writing integration tests with JUnit and setting up a developer workflow including build and dependency management as well as a continuous integration server.
+
+We assumed that the deadline for delivering the functionality to comply with the new regulations, coincides with the coursework submission deadline. Therefore our first priority was to ensure that these requirements would be met in a safe and timely manner.
+
+
+
+\section{Acceptance Testing}
+
+To specify the functionality of the new system we wrote acceptance tests that captured both the new requirements and the remaining, unchanged behaviour of the old system. As there was no formal specification we had to be careful that these captured the full behaviour of the system. The tests we implemented specified the following behaviour:
+
+Calls that:
+\begin{itemize}
+\item start and finish during the same peak time range
+\item start and finish during the same off peak time range
+\item start during a peak time range and finish at the following off peak time range
+\item start during an off peak time range and finish at the following peak time range
+\item start during one off peak time range and finish at the following off peak time range
+\item start during one peak time range and finish at the following peak time range
+\end{itemize}
+
+We implemented the acceptance tests using Fit documents and executed them using the FitNesse acceptance testing framework. We decided to use Fit documents to specify the system as they can easily be edited and read by non-technical stakeholders at AcmeTelecom. FitNesse allows AcmeTelecom to modify, view and run the tests from a user friendly wiki interface. 
+
+Our Fit documents followed the Given When Then structure popular in behaviour driven development. It allowed us to form behaviour "narratives" that used domain language in a natural way that the client can understand. Also most of our tests were data driven and the Given section permitted us to easily specify the information required by the test.  
+\\
+
+An example of Fit test can be seen below:
+
+\begin{center}
+\includegraphics[scale=0.5]{images/fitnesse_test.png}
+\end{center}
+
+
+
+\section{Unit Testing}
+
+We implemented a comprehensive passing integration tests to prevent us from breaking existing functionality as we refactored the code base. This was particularly tricky as the createCustomerBills method of BillingSystem output to stdout. The test would set up a number of calls before requesting the bill for those customers. In order to check the output bill we had to redirect Sys.out to a PrintStream, collecting the generated bill into a string on which assertions could be made.
+
+The existing system had not been written with testing in mind so it was very difficult for us to write unit tests or wire up our FitNesse tests. In order to introduce new unit tests we needed to introduce seams enabling us to isolate sections of code. The seams were necessary to break dependencies and allow injection of test values. For example, as the system used the current system time for logging calls, we couldn't create repeatable, non-brittle tests. With the integration tests in place we were confident in refactoring the code to allow arbitrary times to be injected into CallEnd and CallStart.
+
+\begin{verbatim}
+public CallEnd(String caller, String callee, long timestamp) {
+    super(caller, callee, timestamp);
+}
+\end{verbatim}
+
+After making these changes we ensured that the integration test continued to pass and started implementing new functionality using Test-Driven Development (TDD).  As we broke dependencies we introduced interfaces which could be mocked and allowed for testing and verification of object interactions. We used JUnit for testing and Mockito for producing mock objects.
+
+
+ Using this strategy we can have confidence in our current progress in implementing features, writing the tests themselves ensures we are always working towards the end goal, and the changes themselves are self documenting. 
+
+Three of the key class unit tests show our approach here. FixedRateBillCalculatorTest and VariableRateBillCalculatorTest calculate call cost for the old and new requirements respectively. As one would expect, each have the same test methods. Shown bellow is an example test for FixedRateBillCalculatorTest. In fact, full coverage is obtained with just three scenarios, Peak-Peak, OffPeak-OffPeak, OffPeak-Peak. We feel this validates our decision to factor the call cost calculation from the BillingSystem.
+
+\begin{verbatim}
+@Test
+    public void testCallsWithMixedPeakPeriod() {
+        CallStart callStart = new CallStart("Dan", "Javad", Timestamp.valueOf("2011-11-11 06:00:00").getTime());
+        CallEnd callEnd = new CallEnd("Dan", "Javad", Timestamp.valueOf("2011-11-11 08:00:00").getTime());
+        Call call = new Call(callStart, callEnd);
+        DaytimePeakPeriod peakPeriod = new DaytimePeakPeriod();
+        FixedRateBillCalculator billCalulator = new FixedRateBillCalculator();
+        assertTrue(billCalulator.getCallCost(Tariff.Standard, call, peakPeriod).intValue() == 3600);
+    }
+\end{verbatim}
+
+
+Naturally, the unit test for BillingSystem follows, and it possibly the most critical system component. We decided to mock most of the injection parameters to avoid uncertainty and maintain test control. An example test is shown below.
+
+
+\section{Refactoring}
+The old code was an unorganised 'big ball of mud' that had many cyclic dependencies and no clear layering. This meant that adding functionality requires changing code across the whole code base and made it difficult to for us to build acceptance tests and unit tests as we couldn't inject the required mock objects. Another issue is that the code was not organised into packages, making it difficult to locate relevant code.  We made the following steps to remedy these problems:
+After initial analysis it became clear that acceptance testing on the initial codebase would be challenging; the functionality is centered around time instances which are not injected, making mocking difficult. We decided to inject the timestamp from a higher level so the timestamp could be mocked. This allowed us to implement basic acceptance tests to verify overall system behavior under different call time scenarios.
+We decided to remove call logging responsibility from BillingSystem with the intention of injecting an interface that supports call retrieval, this would allow much greater flexibility as the way calls are logged is now completely separated from the BillingSystem.
+Clearly the call events must now be injected into a call log instance, the actual implementation is similar to the previous BillingSystem implementation but now injects the timestamp as described in the first point. 
+An overridden method was introduced into the CallEvent class to remove the 'instanceof' usage in the call calculation method.
+TarrifLibrary and CustomerDatabase interfaces are now injected into BillingSystem to remove implementation dependency, this is a crucial step as mocking can now be used to unit test BillingSystem.
+A BillGenerator interface is injected into BillingSystem, this allows control over the BillGenerator type (e.g. to allow different formatting options).
+To finalise the refactoring of BillingSystem, the call cost functionality is now injected via an interface to allow for greater flexibility, the old calculation method can easily be swapped for new calculation methods for example, this will be particularly useful later for acceptance testing. Also a BillItem abstract server was introduced to remove the reverse dependency from Printer.
+
+Components.- irrelevant?
+If its got manual DI its probably been made into compopnents 
+Dependency injection frameworks (e.g. Guice or Spring) - not yet but guice
+
+http://www.natpryce.com/articles/000783.html
+we thought about 2 phone calls at the same time with the same people 
+
+
+The structure before and after refactoring are shown below:
+%Diagram before
+\begin{center}
+\includegraphics[scale=0.75]{images/original_structure.png}
+\end{center}
+
+<CHECK BEFORE SUBMISSION>
+
+Clearly the structure has been much improved, the new layering enables much greater configurability.
+different billing methods fairly easily without impacting other packagers. All of the logic for calculati
+
+\begin{verbatim}
+public void createCustomerBills(Log callLog) {
+    for (Customer customer : customerDatabase.getCustomers()) {
+        createBillFor(customer, callLog);
+    }
+}
+
+private void createBillFor(Customer customer, Log callLog) {
+    BigDecimal totalBill = new BigDecimal(0);
+    List<BillItem> items = new ArrayList<BillItem>();
+    Tariff tariff = tariffLibrary.tarriffFor(customer);
+    for (Call call : callLog.getCalls(customer)) {
+        BigDecimal callCost = billCalculator.getCallCost(tariff, call, peakPeriod);
+        totalBill = totalBill.add(callCost);
+        items.add(new LineItem(call, callCost));
+    }
+    billGenerater.generate(customer, items, totalBill);
+}
+\end{verbatim}
+
+
+%Diagram after
+
+%Wrote new code
+\section{Implementing Variable Billing}
+As the refactoring has given us an interface "BillCalculator", we can add ng the price can be done in one function, "getCallCost" in the implementation of BillCalculator.
+
+We have decided to make use of Joda-Time for storing call start times and end times, as this class has a lot of useful functions for making calculations with dates.
+
+\begin{verbatim}
+public BigDecimal getCallCost(Call call, Tariff tariff, DaytimePeakPeriod peakPeriod) {
+    DateTime currentTime = call.startTime();
+    DateTime endTime = call.endTime();
+    int totalOffPeakDuration = 0;
+    int totalPeakDuration = 0;
+    while (currentTime.compareTo((call.endTime())) < 0) {
+        DateTime nextPeakChange = peakPeriod.nextPeakChange(currentTime);
+        int peakDuration = Math.min(Seconds.secondsBetween(currentTime,          endTime).getSeconds(),
+        Seconds.secondsBetween(currentTime, nextPeakChange).getSeconds());
+        if (peakPeriod.offPeak(currentTime)) {
+            totalOffPeakDuration += peakDuration;
+        } else {
+            totalPeakDuration += peakDuration;
+        }
+        currentTime = currentTime.plusSeconds(peakDuration);
+    }
+    BigDecimal offPeakCost = new BigDecimal(totalOffPeakDuration).multiply(tariff.offPeakRate());
+    BigDecimal peakCost = new BigDecimal(totalPeakDuration).multiply(tariff.peakRate());
+    return offPeakCost.add(peakCost).setScale(0, RoundingMode.HALF_UP);
+}
+\end{verbatim}
+
+We made us of a new function "nextPeakChange" which given a time, returns the following time boundary between on and off peak. This means we can work out at most how long they should be charged at a given rate in O(1) time.
+
+The code works by starting from the beginning of the call and adding the number of seconds between the current time and the next boundary to either th5e off peak duration or on peak duration. It then continues to do this from the previous boundary until the end. This function has a complexity of O(k) where k is the number of boundaries. As we can assume no conversation lasts over 24 hours, we will only loop at most 3 times.
+
+
+%Anything else you did
+\section{Release Cycle}
+We used a continuous deployment style release cycle; we committed changes to a repository once associated test procedure had passed. We used Jenkins to help manage testing, verifying when a commit was appropriate, this allowed us to gradually increase code coverage and maintain a steady deployment. 
+
+CI with
+Emma code coverage
+Unit testing
+Running fit testing using Fitnesse
+
+%\section{Something else}
+
+% Managing future improvements
+\section{Potential Improvements}
+Concurrent calls.
+Call ordering on bill. 
+
+
+
+\begin{comment}
+Key points to talk about: (Not covered, Covered)
+TD.
+build tests prior to development
+avoiding brittle tests
+self documenting
+OO Design.
+Mocking.
+Unit Testing.
+Domain Specific Languages.
+Dependency principles.
+Dependency inversion: abstract client and abstract server (in code refactoring)
+Dependency injection
+Modularity and Layering.
+The top of a hierarchy can be easily changed as there arenÕt any incoming dependencies.
+Requirement analysis.
+listening to customers and domain experts
+clear document of requirements filtering non essential information
+analysis
+Developing under pressure.
+Slicing
+vertical slicing??? - not really relevant
+Momentum. - stupid
+Understanding the specified requirements.
+Reading spec
+Clarifying with client
+writing up requirement list - emitting shit
+New requirements.
+Release strategy/cycle.
+Version control.
+using git
+Continuous deployment. - irrelevant?
+Continuous integration
+
+
+
+c) refactored the existing code in order to achieve the above
+
+The current code was an unorganised Ôbig ball of mudÕ that had many cyclic dependencies meaning that adding functionality requires changing code across multiple classes making it difficult to prevent errors and test rigorously. Another issue is that the code was not organised into packages...So prior to adding the new functionality we organised the classes into packages then analysed the current code using structure 101 to locate these cyclic dependencies. We obtained the following graph:
+
+
+The risk is that the code becomes a Ôbig ball of mudÕ that is difficult to understand. Extending such as system requires that many classes and test be modified across multiple packages.
+
+
+d) wrote new code
+
+With the new organisation of the code we have seperate classes for the old and new billing methods:
+FixedRateBillCalculater and VariableRateBillCalculater so that we could have unit tests for both.
+
+Made use of Joda-Time instead of the current DateTime library as it has extra functionality.
+
+Once the code was refactored, we simply needed to implement one function in the FixedRateBillCalculater (all the logic in the same place)			
+does the minute at the peak boundary count as on peak or off peak
+
+e) anything else you did
+
+
+
+
+release cycle: added functionality, once it passed tests we comited and released.
+
+Once we implemented the new functionality of the code correctly, with all jenkins tests passing, we then released the code. From this point on, we could regularly release refactored code providing it doesnÕt prevent any of the tests from working. This regular releasing simplifies the releasing process as we will not risk encountering too many errors during one release.
+
+As we worked  in a team of four to develop the new functionality and refactor the code, it was important for us to make use of version control. We made use of GitHub, talk about rebase and shit.
+
+The requirements we were given meant that vertical slicing was not plausible as we essentially only needed to modify the implementation of one horizontal slice. However
+
+
+
+f) how would you manage adding further features to this code in future 
+		
+	
+DSL JODA TIME AND HAMCREST
+nice examples of when to 
+
+
+gen call for bill that hasnt endend
+\end{comment}
+
+
+\end{document}
