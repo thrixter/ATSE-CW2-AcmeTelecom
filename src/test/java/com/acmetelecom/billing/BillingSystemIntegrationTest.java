@@ -1,16 +1,37 @@
 package com.acmetelecom.billing;
 
+import com.acmetelecom.calling.CallLogger;
+import com.acmetelecom.calling.SyncCallLogger;
+import com.acmetelecom.customer.CentralCustomerDatabase;
+import com.acmetelecom.customer.CentralTariffDatabase;
+import com.acmetelecom.customer.CustomerDatabase;
+import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.printing.BillGenerator;
+import com.acmetelecom.printing.HtmlPrinter;
+import com.acmetelecom.printing.UnorderedBillGenerator;
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.sql.Timestamp;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * User: javad
  * Date: 06/12/2011
  */
 public class BillingSystemIntegrationTest {
 
-    /*CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
-    TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
-    BillGenerator billGenerator = new UnorderedBillGenerator();
+    private CallLogger callLogger = new SyncCallLogger();
+    private CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
+    private TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
+    private BillCalculator billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
+    private BillGenerator billGenerator = new UnorderedBillGenerator(HtmlPrinter.getInstance());
 
-    BillingSystem billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
+    BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
 
     @Test
     public void testBillingSystem() {
@@ -38,19 +59,19 @@ public class BillingSystemIntegrationTest {
 
     private void setUpCalls() {
         // call by Fred Bloggs - Standard Price Plan
-        billingSystem.callInitiated("447711232343", "447711111111");
+        callLogger.callInitiated("447711232343", "447711111111", Timestamp.valueOf("2011-11-30 05:00:00").getTime());
         // wait some time
-        billingSystem.callCompleted("447711232343", "447711111111");
+        callLogger.callCompleted("447711232343", "447711111111", Timestamp.valueOf("2011-11-30 05:30:00").getTime());
 
         // call by John Smith - Business Price Plan
-        billingSystem.callInitiated("447722113434", "447711111111");
+        callLogger.callInitiated("447722113434", "447711111111", Timestamp.valueOf("2011-11-30 14:00:00").getTime());
         // wait some time
-        billingSystem.callCompleted("447722113434", "447711111111");
+        callLogger.callCompleted("447722113434", "447711111111", Timestamp.valueOf("2011-11-30 15:00:00").getTime());
 
         // call by Jane Dixon - Leisure Price Plan
-        billingSystem.callInitiated("447799555444", "447711111111");
+        callLogger.callInitiated("447799555444", "447711111111", Timestamp.valueOf("2011-11-30 19:00:00").getTime());
         // wait some time
-        billingSystem.callCompleted("447799555444", "447711111111");
+        callLogger.callCompleted("447799555444", "447711111111", Timestamp.valueOf("2011-11-30 20:00:00").getTime());
     }
 
     String expectedBill = "<html>\n" +
@@ -62,9 +83,9 @@ public class BillingSystemIntegrationTest {
             "<h2>Fred Bloggs/447711232343 - Price Plan: Standard</h2>\n" +
             "<table border=\"1\">\n" +
             "<tr><th width=\"160\">Time</th><th width=\"160\">Number</th><th width=\"160\">Duration</th><th width=\"160\">Cost</th></tr>\n" +
-            "<tr><td>11/11/11 08:00</td><td>447711111111</td><td>1:00</td><td>0.30</td></tr>\n" +
+            "<tr><td>30/11/11 05:00</td><td>447711111111</td><td>30:00</td><td>3.60</td></tr>\n" +
             "</table>\n" +
-            "<h2>Total: 0.30</h2>\n" +
+            "<h2>Total: 3.60</h2>\n" +
             "</body>\n" +
             "</html>\n" +
             "<html>\n" +
@@ -76,9 +97,9 @@ public class BillingSystemIntegrationTest {
             "<h2>John Smith/447722113434 - Price Plan: Business</h2>\n" +
             "<table border=\"1\">\n" +
             "<tr><th width=\"160\">Time</th><th width=\"160\">Number</th><th width=\"160\">Duration</th><th width=\"160\">Cost</th></tr>\n" +
-            "<tr><td>11/11/11 08:00</td><td>447711111111</td><td>1:00</td><td>0.18</td></tr>\n" +
+            "<tr><td>30/11/11 14:00</td><td>447711111111</td><td>60:00</td><td>10.80</td></tr>\n" +
             "</table>\n" +
-            "<h2>Total: 0.18</h2>\n" +
+            "<h2>Total: 10.80</h2>\n" +
             "</body>\n" +
             "</html>\n" +
             "<html>\n" +
@@ -90,9 +111,9 @@ public class BillingSystemIntegrationTest {
             "<h2>Jane Dixon/447799555444 - Price Plan: Leisure</h2>\n" +
             "<table border=\"1\">\n" +
             "<tr><th width=\"160\">Time</th><th width=\"160\">Number</th><th width=\"160\">Duration</th><th width=\"160\">Cost</th></tr>\n" +
-            "<tr><td>11/11/11 08:00</td><td>447711111111</td><td>1:00</td><td>0.48</td></tr>\n" +
+            "<tr><td>30/11/11 19:00</td><td>447711111111</td><td>60:00</td><td>3.60</td></tr>\n" +
             "</table>\n" +
-            "<h2>Total: 0.48</h2>\n" +
+            "<h2>Total: 3.60</h2>\n" +
             "</body>\n" +
             "</html>\n" +
             "<html>\n" +
@@ -186,5 +207,5 @@ public class BillingSystemIntegrationTest {
             "<h2>Total: 0.00</h2>\n" +
             "</body>\n" +
             "</html>\n";
-    */
+
 }

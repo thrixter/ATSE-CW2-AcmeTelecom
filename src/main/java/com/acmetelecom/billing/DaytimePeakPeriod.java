@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
  *
  * @author dc408, ra808, je08, jm308
  */
-class DaytimePeakPeriod {
+public class DaytimePeakPeriod {
     
     final short peakStart = 7;
     final short offPeakStart = 19;

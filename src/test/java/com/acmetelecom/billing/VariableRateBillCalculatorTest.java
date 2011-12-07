@@ -16,7 +16,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class VariableRateBillCalculatorTest {
 
-    private DaytimePeakPeriod peakPeriod = new DaytimePeakPeriod();
+    private VariableRateBillCalculator billCalulator
+            = new VariableRateBillCalculator(new DaytimePeakPeriod());
 
     @Test
     public void testCallsWithNoOnPeakPeriod() {
@@ -24,8 +25,7 @@ public class VariableRateBillCalculatorTest {
         CallEnd callEnd = new CallEnd("Dan", "Javad", Timestamp.valueOf("2011-11-11 06:00:00").getTime());
         Call call = new Call(callStart, callEnd);
 
-        VariableRateBillCalculator billCalulator = new VariableRateBillCalculator();
-        assertTrue(billCalulator.getCallCost(call, Tariff.Standard, peakPeriod).intValue() == 720);
+        assertTrue(billCalulator.getCallCost(call, Tariff.Standard).intValue() == 720);
     }
 
     @Test
@@ -34,8 +34,7 @@ public class VariableRateBillCalculatorTest {
         CallEnd callEnd = new CallEnd("Dan", "Javad", Timestamp.valueOf("2011-11-11 09:00:00").getTime());
         Call call = new Call(callStart, callEnd);
 
-        VariableRateBillCalculator billCalulator = new VariableRateBillCalculator();
-        assertTrue(billCalulator.getCallCost(call, Tariff.Standard, peakPeriod).intValue() == 1800);
+        assertTrue(billCalulator.getCallCost(call, Tariff.Standard).intValue() == 1800);
     }
 
     @Test
@@ -44,8 +43,7 @@ public class VariableRateBillCalculatorTest {
         CallEnd callEnd = new CallEnd("Dan", "Javad", Timestamp.valueOf("2011-11-11 08:00:00").getTime());
         Call call = new Call(callStart, callEnd);
         
-        VariableRateBillCalculator billCalulator = new VariableRateBillCalculator();
-        assertTrue(billCalulator.getCallCost(call, Tariff.Standard, peakPeriod).intValue() == 2520);
+        assertTrue(billCalulator.getCallCost(call, Tariff.Standard).intValue() == 2520);
     }
 
 }

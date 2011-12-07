@@ -1,10 +1,14 @@
 package com.acmetelecom;
 
+import com.acmetelecom.billing.BillCalculator;
+import com.acmetelecom.billing.DaytimePeakPeriod;
+import com.acmetelecom.billing.FixedRateBillCalulator;
 import com.acmetelecom.printing.BillGenerator;
 import com.acmetelecom.billing.BillingSystem;
 import com.acmetelecom.calling.CallLogger;
 import com.acmetelecom.calling.SyncCallLogger;
 import com.acmetelecom.customer.*;
+import com.acmetelecom.printing.HtmlPrinter;
 import com.acmetelecom.printing.UnorderedBillGenerator;
 
 import java.sql.Timestamp;
@@ -23,12 +27,13 @@ public class Runner {
     public static void main(String[] args) throws Exception {
         System.out.println("Running...");
 
+        CallLogger callLogger = new SyncCallLogger();
         CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
         TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
-        BillGenerator billGenerator = new UnorderedBillGenerator();
+        BillCalculator billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
+        BillGenerator billGenerator = new UnorderedBillGenerator(HtmlPrinter.getInstance());
 
-        CallLogger callLogger = new SyncCallLogger();
-        BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
+        BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
 
         callLogger.callInitiated("447722113434", "447766814143", Timestamp.valueOf("2011-11-30 05:00:00").getTime());
         callLogger.callCompleted("447722113434", "447766814143", Timestamp.valueOf("2011-11-30 06:00:00").getTime());
