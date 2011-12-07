@@ -93,13 +93,18 @@ separate out BillCalculator
 tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
 add Fixed (old requirements) and Variable (new requirements) calculator
 refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
-billgenerator not ordered, also inject printer in
+billgenerator not ordered, check requirements with user, also inject printer in
 Customer builder with tinytypes for firstname, lastname, number
 CallEvent builder with tinytypes
-CallEvent map?
 
+CallEvent map?
 
 add DSL for CallLogger
 
 findbugs
 jdepend?
+
+ports and adapters, especially around the customer and tariff db!!
+
+
+for DSLs we used joda time, hamcrest, our own, suggest one for query call log
