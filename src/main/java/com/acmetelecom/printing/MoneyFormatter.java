@@ -1,4 +1,4 @@
-package com.acmetelecom;
+package com.acmetelecom.printing;
 
 import java.math.BigDecimal;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  *
  * @author dc408, ra808, je08, jm308
  */
-class MoneyFormatter {
+public class MoneyFormatter {
     /**
      *
      * @param pence

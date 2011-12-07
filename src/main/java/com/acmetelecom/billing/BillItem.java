@@ -1,4 +1,7 @@
-package com.acmetelecom;
+package com.acmetelecom.billing;
+
+import com.acmetelecom.calling.Call;
+import com.acmetelecom.printing.LineItem;
 
 import java.math.BigDecimal;
 
@@ -6,7 +9,7 @@ import java.math.BigDecimal;
 * User: javad
 * Date: 07/12/2011
 */
-class LineItem {
+public class BillItem implements LineItem {
     private Call call;
     private BigDecimal callCost;
 
@@ -15,7 +18,7 @@ class LineItem {
      * @param call
      * @param callCost
      */
-    public LineItem(Call call, BigDecimal callCost) {
+    public BillItem(Call call, BigDecimal callCost) {
         this.call = call;
         this.callCost = callCost;
     }
@@ -68,8 +71,8 @@ class LineItem {
         }
         
         if (obj instanceof LineItem) {
-            // obj must be LineItem at this point
-            LineItem other = (LineItem) obj;
+            // obj must be BillItem at this point
+            BillItem other = (BillItem) obj;
 
             if (call == null && other.call != null
                     || callCost == null && other.callCost != null) {

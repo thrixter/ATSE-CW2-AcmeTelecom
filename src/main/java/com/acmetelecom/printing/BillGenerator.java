@@ -1,4 +1,4 @@
-package com.acmetelecom;
+package com.acmetelecom.printing;
 
 import com.acmetelecom.customer.Customer;
 
@@ -9,5 +9,7 @@ import java.util.List;
  * Date: 06/12/2011
  */
 public interface BillGenerator {
-    public void send(Customer customer, List<LineItem> calls, String totalBill);
+
+    public void send(Customer customer, List<? extends LineItem> calls, String totalBill);
+    
 }

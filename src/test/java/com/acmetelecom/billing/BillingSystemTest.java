@@ -1,9 +1,12 @@
-package com.acmetelecom;
+package com.acmetelecom.billing;
 
+import com.acmetelecom.printing.BillGenerator;
+import com.acmetelecom.calling.*;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.printing.LineItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,7 +34,8 @@ public class BillingSystemTest {
 
     @Mock CustomerDatabase customerDatabase;
     @Mock TariffLibrary tariffDatabase;
-    @Mock BillGenerator billGenerator;
+    @Mock
+    BillGenerator billGenerator;
 
     @Before
     public void setUpCustomers() {
@@ -52,13 +56,16 @@ public class BillingSystemTest {
     public void testCustomerBillIsGeneratedForACall() {
 
         // todo: CallLogger with TinyTypes
-        callLogger.callInitiated("447722113434", "447777765432", Timestamp.valueOf("2011-11-29 15:00:00").getTime());
-        callLogger.callCompleted("447722113434", "447777765432", Timestamp.valueOf("2011-11-29 15:01:00").getTime());
+        long startTime = Timestamp.valueOf("2011-11-29 15:00:00").getTime();
+        long endTime = Timestamp.valueOf("2011-11-29 15:01:00").getTime();
+
+        callLogger.callInitiated("447722113434", "447777765432", startTime);
+        callLogger.callCompleted("447722113434", "447777765432", endTime);
 
         billingSystem.createCustomerBills();
 
-        List<LineItem> lineItems = Arrays.asList(
-                new LineItem(new Call(new CallStart("447722113434", "447777765432"), new CallEnd("447722113434", "447777765432")),
+        List<? extends LineItem> lineItems = Arrays.asList(
+                new BillItem(new Call(new CallStart("447722113434", "447777765432", startTime), new CallEnd("447722113434", "447777765432", endTime)),
                         BigDecimal.valueOf(18))
         );
 

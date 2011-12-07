@@ -1,4 +1,4 @@
-package com.acmetelecom;
+package com.acmetelecom.printing;
 
 import com.acmetelecom.customer.Customer;
 
@@ -8,15 +8,15 @@ import java.util.List;
  * 
  * @author dc408, ra808, je08, jm308
  */
-public class HTMLBillGenerator implements BillGenerator {
+public class UnorderedBillGenerator implements BillGenerator {
 
     /**
-     * 
+     *
      * @param customer
      * @param calls
      * @param totalBill
      */
-    public void send(Customer customer, List<LineItem> calls, String totalBill) {
+    public void send(Customer customer, List<? extends LineItem> calls, String totalBill) {
 
         Printer printer = HtmlPrinter.getInstance();
         printer.printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());

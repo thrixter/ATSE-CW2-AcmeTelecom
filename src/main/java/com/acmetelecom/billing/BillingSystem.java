@@ -1,10 +1,19 @@
-package com.acmetelecom;
+package com.acmetelecom.billing;
 
-import com.acmetelecom.customer.*;
+import com.acmetelecom.calling.Call;
+import com.acmetelecom.calling.CallLogger;
+import com.acmetelecom.customer.Customer;
+import com.acmetelecom.customer.CustomerDatabase;
+import com.acmetelecom.customer.Tariff;
+import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.printing.BillGenerator;
+import com.acmetelecom.printing.LineItem;
+import com.acmetelecom.printing.MoneyFormatter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -59,7 +68,7 @@ public class BillingSystem {
 
         for (Call call : calls) {
             BigDecimal callCost = calculateCostOf(call, tariff);
-            items.add(new LineItem(call, callCost));
+            items.add(new BillItem(call, callCost));
         }
         return items;
     }

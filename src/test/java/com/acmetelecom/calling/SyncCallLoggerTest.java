@@ -1,7 +1,6 @@
-package com.acmetelecom;
+package com.acmetelecom.calling;
 
 import com.acmetelecom.customer.Customer;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -19,11 +18,6 @@ public class SyncCallLoggerTest {
 
     private String callerNumber = "1";
     private Customer caller = new Customer("Dan Cooke", callerNumber, "Standard");
-
-    @Before
-    public void setUpCustomer() {
-
-    }
 
     @Test
     public void testCallIsLogged() {

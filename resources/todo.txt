@@ -72,24 +72,34 @@ still using existing peak off-peak function
 order calls by start time then duration on the bill!
 acceptance tests across call plans use the same call times (control/fairness/clearness)
 query table for call costs, split per customer
+test 0.04 seconds, currently not charged
 
 wrote a nearly end-to-end FitNesse test
 had to redirect System.out!
 fixed the times!
 failed on jenkins due to newline char being different, so disabled it on CI, but still passed locally
+introduced seam, changed so that call time could be injected into call event, able to test
 gets tariff for each customer inside call loop, inefficient, call it from outside
 injected billgenerator
 created new test using mocking of billgenerator, customerdb, tarifflib
 todo: billgenerator does not need string totalBill as lineitems has this already!
 still use callinit and call complete, still with fixed times
 but needed to add equals and hashcode to lineitem for verifying billgen send, also better than comparing primitives
-broke up createBillForCustomer into a number of methods such as getCallsFor(customer), calculateCostOfEachCall, calculateTotalBill
+broke up createBillForCustomer into a number of methods such as getCallsFor(customer), calculateCostOfEachCall, calculateTotalBill, able to sense values
 introduce CallLogger with getCallsFor(customer)
 noticed calls are synchronous, system doesn't allow simultaneous calls, need to check requirements but kept behaviour the same, added test to check this
 callLogger injected into BillingSystem, e.g. can have async call logger
-changed so that call time could be injected into call event
 separate out BillCalculator
-Customer factory method with tinytypes for firstname, lastname, number
+tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
+add Fixed (old requirements) and Variable (new requirements) calculator
+refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
+billgenerator not ordered, also inject printer in
+Customer builder with tinytypes for firstname, lastname, number
+CallEvent builder with tinytypes
+CallEvent map?
 
 
 add DSL for CallLogger
+
+findbugs
+jdepend?

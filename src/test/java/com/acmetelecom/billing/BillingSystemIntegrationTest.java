@@ -1,4 +1,4 @@
-package com.acmetelecom;
+package com.acmetelecom.billing;
 
 /**
  * User: javad
@@ -8,7 +8,7 @@ public class BillingSystemIntegrationTest {
 
     /*CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
     TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
-    BillGenerator billGenerator = new HTMLBillGenerator();
+    BillGenerator billGenerator = new UnorderedBillGenerator();
 
     BillingSystem billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
 

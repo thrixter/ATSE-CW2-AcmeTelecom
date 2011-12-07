@@ -1,4 +1,4 @@
-package com.acmetelecom;
+package com.acmetelecom.calling;
 
 import com.acmetelecom.customer.Customer;
 
@@ -18,11 +18,11 @@ public class SyncCallLogger implements CallLogger {
     }
 
     public void callInitiated(String caller, String callee, long timestamp) {
-        callLog.add(new CallStart(caller, callee));
+        callLog.add(new CallStart(caller, callee, timestamp));
     }
 
     public void callCompleted(String caller, String callee, long timestamp) {
-        callLog.add(new CallEnd(caller, callee));
+        callLog.add(new CallEnd(caller, callee, timestamp));
     }
 
     public void clear() {

@@ -1,13 +1,14 @@
-package com.acmetelecom;
+package com.acmetelecom.calling;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * 
  * @author dc408, ra808, je08, jm308
  */
 public class Call {
+    private static String dateFormatPattern = "dd/MM/yy HH:mm";
+
     private CallEvent start;
     private CallEvent end;
 
@@ -42,23 +43,23 @@ public class Call {
      * @return
      */
     public String date() {
-        return SimpleDateFormat.getInstance().format(new Date(start.time()));
+        return new DateTime(start.time()).toString(dateFormatPattern);
     }
 
     /**
      * 
      * @return
      */
-    public Date startTime() {
-        return new Date(start.time());
+    public DateTime startTime() {
+        return new DateTime(start.time());
     }
 
     /**
      * 
      * @return
      */
-    public Date endTime() {
-        return new Date(end.time());
+    public DateTime endTime() {
+        return new DateTime(end.time());
     }
 
     public int hashCode() {
