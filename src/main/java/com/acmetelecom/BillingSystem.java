@@ -1,9 +1,6 @@
 package com.acmetelecom;
 
-import com.acmetelecom.customer.CentralCustomerDatabase;
-import com.acmetelecom.customer.CentralTariffDatabase;
-import com.acmetelecom.customer.Customer;
-import com.acmetelecom.customer.Tariff;
+import com.acmetelecom.customer.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,6 +13,18 @@ import java.util.*;
 public class BillingSystem {
 
     private List<CallEvent> callLog = new ArrayList<CallEvent>();
+
+    private BillGenerator billGenerator;
+    private CustomerDatabase customerDatabase;
+    private TariffLibrary tariffDatabase;
+
+    public BillingSystem(CustomerDatabase customerDatabase,
+                         TariffLibrary tariffDatabase,
+                         BillGenerator billGenerator) {
+        this.billGenerator = billGenerator;
+        this.customerDatabase = customerDatabase;
+        this.tariffDatabase = tariffDatabase;
+    }
 
     /**
      * 
@@ -39,8 +48,7 @@ public class BillingSystem {
      * 
      */
     public void createCustomerBills() {
-        // todo: can't inject customers, needed for tests
-        List<Customer> customers = CentralCustomerDatabase.getInstance().getCustomers();
+        List<Customer> customers = customerDatabase.getCustomers();
         for (Customer customer : customers) {
             createBillFor(customer);
         }
@@ -52,6 +60,18 @@ public class BillingSystem {
      * @param customer
      */
     private void createBillFor(Customer customer) {
+        List<Call> calls = getCallsFor(customer);
+
+        Tariff tariff = tariffDatabase.tarriffFor(customer);
+
+        List<LineItem> items = calculateCostOf(calls, tariff);
+
+        BigDecimal totalBill = calculateTotalBill(items);
+
+        billGenerator.send(customer, items, MoneyFormatter.penceToPounds(totalBill));
+    }
+
+    private List<Call> getCallsFor(Customer customer) {
         List<CallEvent> customerEvents = new ArrayList<CallEvent>();
         for (CallEvent callEvent : callLog) {
             if (callEvent.getCaller().equals(customer.getPhoneNumber())) {
@@ -72,80 +92,42 @@ public class BillingSystem {
                 start = null;
             }
         }
+        return calls;
+    }
 
-        BigDecimal totalBill = new BigDecimal(0);
+    private List<LineItem> calculateCostOf(List<Call> calls, Tariff tariff) {
         List<LineItem> items = new ArrayList<LineItem>();
 
         for (Call call : calls) {
 
-            // todo: can't inject tarriffs, needed for tests
-            Tariff tariff = CentralTariffDatabase.getInstance().tarriffFor(customer);
-
-            BigDecimal cost;
-
-            DaytimePeakPeriod peakPeriod = new DaytimePeakPeriod();
-            if (peakPeriod.offPeak(call.startTime()) && peakPeriod.offPeak(call.endTime()) && call.durationSeconds() < 12 * 60 * 60) {
-                cost = new BigDecimal(call.durationSeconds()).multiply(tariff.offPeakRate());
-            } else {
-                cost = new BigDecimal(call.durationSeconds()).multiply(tariff.peakRate());
-            }
-
-            cost = cost.setScale(0, RoundingMode.HALF_UP);
-            BigDecimal callCost = cost;
-            totalBill = totalBill.add(callCost);
+            BigDecimal callCost = calculateCostOf(call, tariff);
             items.add(new LineItem(call, callCost));
         }
-        // todo: pull all the above into a method so can sense line items given some calls
-
-        // todo: need a fitnesse test for checking bill format
-        new BillGenerator().send(customer, items, MoneyFormatter.penceToPounds(totalBill));
+        return items;
     }
 
+    private BigDecimal calculateCostOf(Call call, Tariff tariff) {
+        BigDecimal cost;
 
-    static class LineItem {
-        private Call call;
-        private BigDecimal callCost;
-
-        /**
-         *
-         * @param call
-         * @param callCost
-         */
-        public LineItem(Call call, BigDecimal callCost) {
-            this.call = call;
-            this.callCost = callCost;
+        DaytimePeakPeriod peakPeriod = new DaytimePeakPeriod();
+        if (peakPeriod.offPeak(call.startTime()) && peakPeriod.offPeak(call.endTime()) && call.durationSeconds() < 12 * 60 * 60) {
+            cost = new BigDecimal(call.durationSeconds()).multiply(tariff.offPeakRate());
+        } else {
+            cost = new BigDecimal(call.durationSeconds()).multiply(tariff.peakRate());
         }
 
-        /**
-         *
-         * @return
-         */
-        public String date() {
-            return call.date();
-        }
-
-        /**
-         *
-         * @return
-         */
-        public String callee() {
-            return call.callee();
-        }
-
-        /**
-         *
-         * @return
-         */
-        public String durationMinutes() {
-            return "" + call.durationSeconds() / 60 + ":" + String.format("%02d", call.durationSeconds() % 60);
-        }
-
-        /**
-         *
-         * @return
-         */
-        public BigDecimal cost() {
-            return callCost;
-        }
+        cost = cost.setScale(0, RoundingMode.HALF_UP);
+        return cost;
     }
+
+    private BigDecimal calculateTotalBill(List<LineItem> items) {
+        BigDecimal totalBill = new BigDecimal(0);
+
+        for (LineItem lineItem : items) {
+            totalBill = totalBill.add(lineItem.cost());
+        }
+
+        return totalBill;
+    }
+
 }

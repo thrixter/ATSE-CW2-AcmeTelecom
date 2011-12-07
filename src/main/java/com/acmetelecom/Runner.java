@@ -1,5 +1,7 @@
 package com.acmetelecom;
 
+import com.acmetelecom.customer.*;
+
 /**
  * User: javad
  * Date: 30/11/2011
@@ -13,7 +15,12 @@ public class Runner {
      */
     public static void main(String[] args) throws Exception {
         System.out.println("Running...");
-        BillingSystem billingSystem = new BillingSystem();
+
+        CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
+        TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
+        BillGenerator billGenerator = new HTMLBillGenerator();
+
+        BillingSystem billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
         billingSystem.callInitiated("447722113434", "447766814143");
         sleepSeconds(20);
         billingSystem.callCompleted("447722113434", "447766814143");

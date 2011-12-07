@@ -1,5 +1,9 @@
 package com.acmetelecom;
 
+import com.acmetelecom.customer.CentralCustomerDatabase;
+import com.acmetelecom.customer.CentralTariffDatabase;
+import com.acmetelecom.customer.CustomerDatabase;
+import com.acmetelecom.customer.TariffLibrary;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -13,9 +17,13 @@ import static org.junit.Assert.assertEquals;
  * User: javad
  * Date: 06/12/2011
  */
-public class BillGeneratorTest {
+public class BillingSystemIntegrationTest {
 
-    BillingSystem billingSystem = new BillingSystem();
+    CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
+    TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
+    BillGenerator billGenerator = new HTMLBillGenerator();
+
+    BillingSystem billingSystem = new BillingSystem(customerDatabase, tariffDatabase, billGenerator);
 
     @Test
     public void testBillingSystem() {

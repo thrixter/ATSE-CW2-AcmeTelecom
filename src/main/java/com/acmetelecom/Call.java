@@ -1,11 +1,6 @@
 package com.acmetelecom;
 
-import javax.swing.text.DateFormatter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -65,4 +60,25 @@ public class Call {
     public Date endTime() {
         return new Date(end.time());
     }
+
+    public int hashCode() {
+        return end.hashCode();
+    }
+
+    public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (other instanceof Call) {
+			Call call = (Call) other;
+
+            if (start == null && call.start != null
+                    || end == null && call.end != null) {
+                return false;
+            }
+
+			return start.equals(call.start) && end.equals(call.end);
+		}
+		return false;
+	}
 }
