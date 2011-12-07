@@ -1,25 +1,12 @@
 package com.acmetelecom;
 
-import com.acmetelecom.customer.CentralCustomerDatabase;
-import com.acmetelecom.customer.CentralTariffDatabase;
-import com.acmetelecom.customer.CustomerDatabase;
-import com.acmetelecom.customer.TariffLibrary;
-import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
-import static org.junit.Assert.assertEquals;
-
 /**
  * User: javad
  * Date: 06/12/2011
  */
 public class BillingSystemIntegrationTest {
 
-    CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
+    /*CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
     TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
     BillGenerator billGenerator = new HTMLBillGenerator();
 
@@ -199,4 +186,5 @@ public class BillingSystemIntegrationTest {
             "<h2>Total: 0.00</h2>\n" +
             "</body>\n" +
             "</html>\n";
+    */
 }
