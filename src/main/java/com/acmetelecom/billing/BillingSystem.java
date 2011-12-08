@@ -52,7 +52,7 @@ public class BillingSystem {
      * @param customer
      */
     private void createBillFor(Customer customer) {
-            List<Call> calls = callLogger.getCallsFor(customer);
+        List<Call> calls = callLogger.getCallsFor(customer);
 
         Tariff tariff = tariffDatabase.tarriffFor(customer);
 
