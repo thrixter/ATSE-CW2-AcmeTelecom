@@ -56,14 +56,14 @@ use JodaTime
 
 
 off-peak charges (pence/minute):
-standard: 0.12
 business: 0.18
 leisure: 0.06
+standard: 0.12
 
 peak charges (pence/minute):
-standard: 0.30
 business: 0.18
 leisure: 0.48
+standard: 0.30
 
 bill shows how portion of call was charged
 from 7th hour onwards changes tariff
