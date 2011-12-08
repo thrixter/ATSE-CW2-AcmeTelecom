@@ -28,13 +28,16 @@ public class BillingSystemIntegrationTest {
     private CallLogger callLogger = new SyncCallLogger();
     private CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
     private TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
-    private BillCalculator billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
     private BillGenerator billGenerator = new UnorderedBillGenerator(HtmlPrinter.getInstance());
 
-    BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
+    BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
 
     @Test
     public void testBillingSystem() {
+
+        billingSystem.setBillCalculator(
+                new FixedRateBillCalulator(new DaytimePeakPeriod())
+        );
 
         setUpCalls();
 

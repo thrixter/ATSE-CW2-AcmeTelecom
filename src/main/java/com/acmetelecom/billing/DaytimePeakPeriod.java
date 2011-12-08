@@ -22,7 +22,7 @@ public class DaytimePeakPeriod {
 
         if (offPeak(currentTime)) {
             hour = peakStart;
-            if (currentTime.getHourOfDay() > offPeakStart) {
+            if (currentTime.getHourOfDay() >= offPeakStart) {
                 next = currentTime.plusDays(1);
             }
         } else {

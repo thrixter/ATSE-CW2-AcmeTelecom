@@ -51,7 +51,7 @@ public class BillingSystemTest {
         callLogger = new SyncCallLogger();
         billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
 
-        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
+        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
     }
 
     @Test
