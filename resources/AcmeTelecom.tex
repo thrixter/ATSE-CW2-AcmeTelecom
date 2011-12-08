@@ -67,11 +67,11 @@ public CallEnd(String caller, String callee, long timestamp) {
 
 After making these changes we ensured that the integration test continued to pass and started implementing new functionality using Test-Driven Development (TDD).  As we broke dependencies we introduced interfaces which could be mocked and allowed for testing and verification of object interactions. 
 
-We used JUnit for testing and Mockito for .
-
+For our unit testing framework we used JUnit assisted by Mockito for mocking objects and EMMA for gathering code coverage statistics. Upon completion of the project we had 92\% code coverage
 
 \begin{comment}
 Important to get good code coverage and high quality tests which test edge cases such e.g. getting the time of the next off peak / peak change
+calls that last for less than a second - keep the behaviour the same but consult with the client f there is a m
 self documenting
 HAMCREST and dsl
 Requirement analysis.
@@ -83,13 +83,15 @@ remote debugging of fitnesss using eclipse
 
 \section{Refactoring}
 The old code was an unorganised 'big ball of mud' that had many cyclic dependencies and no clear layering. This meant that adding functionality requires changing code across the whole code base and made it difficult to for us to build acceptance tests and unit tests as we couldn't inject the required mock objects. Another issue is that the code was not organised into packages, making it difficult to locate relevant code.  We made the following steps to remedy these problems:
-After initial analysis it became clear that acceptance testing on the initial codebase would be challenging; the functionality is centered around time instances which are not injected, making mocking difficult. We decided to inject the timestamp from a higher level so the timestamp could be mocked. This allowed us to implement basic acceptance tests to verify overall system behavior under different call time scenarios.
-We decided to remove call logging responsibility from BillingSystem with the intention of injecting an interface that supports call retrieval, this would allow much greater flexibility as the way calls are logged is now completely separated from the BillingSystem.
-Clearly the call events must now be injected into a call log instance, the actual implementation is similar to the previous BillingSystem implementation but now injects the timestamp as described in the first point. 
-An overridden method was introduced into the CallEvent class to remove the 'instanceof' usage in the call calculation method.
-TarrifLibrary and CustomerDatabase interfaces are now injected into BillingSystem to remove implementation dependency, this is a crucial step as mocking can now be used to unit test BillingSystem.
-A BillGenerator interface is injected into BillingSystem, this allows control over the BillGenerator type (e.g. to allow different formatting options).
-To finalise the refactoring of BillingSystem, the call cost functionality is now injected via an interface to allow for greater flexibility, the old calculation method can easily be swapped for new calculation methods for example, this will be particularly useful later for acceptance testing. Also a BillItem abstract server was introduced to remove the reverse dependency from Printer.
+\begin{itemize}
+\item After initial analysis it became clear that acceptance testing on the initial codebase would be challenging; the functionality is centered around time instances which are not injected, making mocking difficult. We decided to inject the timestamp from a higher level so the timestamp could be mocked. This allowed us to implement basic acceptance tests to verify overall system behavior under different call time scenarios.
+\item We decided to remove call logging responsibility from BillingSystem with the intention of injecting an interface that supports call retrieval, this would allow much greater flexibility as the way calls are logged is now completely separated from the BillingSystem.
+\item Clearly the call events must now be injected into a call log instance, the actual implementation is similar to the previous BillingSystem implementation but now injects the timestamp as described in the first point. 
+\item An overridden method was introduced into the CallEvent class to remove the 'instanceof' usage in the call calculation method.
+\item TarrifLibrary and CustomerDatabase interfaces are now injected into BillingSystem to remove implementation dependency, this is a crucial step as mocking can now be used to unit test BillingSystem.
+\item A BillGenerator interface is injected into BillingSystem, this allows control over the BillGenerator type (e.g. to allow different formatting options).
+\item To finalise the refactoring of BillingSystem, the call cost functionality is now injected via an interface to allow for greater flexibility, the old calculation method can easily be swapped for new calculation methods for example, this will be particularly useful later for acceptance testing. Also a BillItem abstract server was introduced to remove the reverse dependency from Printer.
+\end{itemize}
 
 Components.- irrelevant?
 If its got manual DI its probably been made into compopnents 
@@ -315,18 +317,13 @@ does the minute at the peak boundary count as on peak or off peak
 
 %Anything else you did
 \section{Development Process}
-We used the GIT distributed version control system to allow our team to effectively collaborate on the same code, hosting our repository on Github as they offer a reliable service and free accounts for students. Using a free micro instance on Amazons Elastic Compute Cloud (EC2) we set up the free Jenkins Continuous Integration (CI) system. Every commit to git would trigger Github's post web hooks, alerting Jenkins that there had been a commit. Jenkins would then checkout the code, build it, run the acceptance tests using FitNesse, integration tests and unit tests using JUnit, and generate code coverage with EMMA. Every time the build status changed, i.e. a successful build after a failed build of a failed build after a successful build, and email would be sent to the group as a warning. We could also see the status of the builds of all commits along with their code coverage and test statueUsing continuous integration enabled the group to track our progress towards a system with full code coverage and then ensure that we maintained the coverage as we made changes. Utilising CI added momentum to the development process as we all wanted full code coverage and to keep the build green. Below is a screenshot of the project page on Jenkins web interface with testing and code coverage graphs.
+We used the GIT distributed version control system to allow our team to effectively collaborate on the same code, hosting our repository on Github as they offer a reliable service and free accounts for students. Using a free micro instance on Amazons Elastic Compute Cloud (EC2) we set up the free Jenkins Continuous Integration (CI) system. Every commit to git would trigger Github's post web hooks, alerting Jenkins that there had been a commit. Jenkins would then checkout the code, build it, run the acceptance tests using FitNesse, integration tests and unit tests using JUnit, and generate code coverage with EMMA. We could also see the status of the builds of all commits along with their code coverage and test status using the Jenkins web interface shown below. Every time the build status changed, i.e. a successful build after a failed build of a failed build after a successful build, and email would be sent to the group as a warning. Using continuous integration enabled the group to track our progress towards a system with full code coverage and then ensure that we maintained the coverage as we made changes. Utilising CI added momentum to the development process as we all wanted full code coverage and to keep the build green. Below is a screenshot of the project page on Jenkins web interface with testing and code coverage graphs.
 
-Once we implemented the new functionality of the code correctly, with all Jenkins tests passing, we then released the code. From this point on, we could regularly release refactored code providing it doesn't prevent any of the tests from working. This regular releasing simplifies the releasing process as we will not risk encountering too many errors during one release.
-As we worked  in a team of four to develop the new functionality and refactor the code, it was important for us to make use of version control.
+To manage building and other tasks associated with the project we used Gradle. We used Gradle as it has a good domain model for build tasks and is very flexible, allowing you to use both ant/Maven build tasks and maven repositories if required. Java build targets were set up by simply including the java plugin although we had to add a main class attribute to the jar manifest file. We also used the emma plugin so that every time we built the test task, EMMA code coverage statistics were generated for Jenkins to use. Lastly we used the idea plugin, this allowed us to generate Intellij IDEA project files which had the libraries and build targets as defined in the Maven build. 
+
+To deploy the system we would extend the current continuous integration system to automatically promote the new builds to production. As this is a desktop application and not a web app, production could correspond to a versioned folder with a symlink to the latest version (to allow blue/green releasing) or a update system to push the software to the users.
 
 \includegraphics[scale=0.4]{images/jenkins_project.png}
-
-
-% Release strategy / cycle
-%gradle java plugin idea plugin emma plugin > maven and ant
-
-%Developing under pressure.
 
 %\section{Something else}
 
