@@ -19,6 +19,6 @@
 !* Then
 | '''The Bill Shows''' |
 | !-Caller Name-! | !-Caller Number-! | !-Price Plan-! | !-Called Number-! | !-Call Time-! | !-Duration-! | !-Cost-! |
-| !-John Smith-! | !-447722113434-! | !-Business-! | !-447799555444-! | !-30/11/11 13:30-! | !-100:00-! | !-18.90-! |
+| !-John Smith-! | !-447722113434-! | !-Business-! | !-447799555444-! | !-30/11/11 13:30-! | !-100:00-! | !-18.00-! |
 
 *!

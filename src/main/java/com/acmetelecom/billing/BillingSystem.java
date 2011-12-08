@@ -28,13 +28,17 @@ public class BillingSystem {
     public BillingSystem(CallLogger callLogger,
                          CustomerDatabase customerDatabase,
                          TariffLibrary tariffDatabase,
-                         BillCalculator billCalculator,
                          BillGenerator billGenerator) {
         this.callLogger = callLogger;
         this.customerDatabase = customerDatabase;
         this.tariffDatabase = tariffDatabase;
-        this.billCalculator = billCalculator;
+        this.billCalculator
+                = new VariableRateBillCalculator(new DaytimePeakPeriod());
         this.billGenerator = billGenerator;
+    }
+
+    public void setBillCalculator(BillCalculator billCalculator) {
+        this.billCalculator = billCalculator;
     }
 
     /**

@@ -33,7 +33,8 @@ public class Runner {
         BillCalculator billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
         BillGenerator billGenerator = new UnorderedBillGenerator(HtmlPrinter.getInstance());
 
-        BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
+        BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
+        billingSystem.setBillCalculator(billCalculator);
 
         callLogger.callInitiated("447722113434", "447766814143", Timestamp.valueOf("2011-11-30 05:00:00").getTime());
         callLogger.callCompleted("447722113434", "447766814143", Timestamp.valueOf("2011-11-30 06:00:00").getTime());
