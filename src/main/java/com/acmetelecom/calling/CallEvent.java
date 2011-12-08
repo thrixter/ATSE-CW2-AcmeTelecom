@@ -1,5 +1,7 @@
 package com.acmetelecom.calling;
 
+import org.joda.time.DateTime;
+
 /**
  * 
  * @author dc408, ra808, je08, jm308
@@ -7,15 +9,15 @@ package com.acmetelecom.calling;
 public abstract class CallEvent {
     private String caller;
     private String callee;
-    private long time;
+    private DateTime time;
 
     /**
-     * 
+     *
      * @param caller
      * @param callee
      * @param timeStamp
      */
-    public CallEvent(String caller, String callee, long timeStamp) {
+    public CallEvent(String caller, String callee, DateTime timeStamp) {
         this.caller = caller;
         this.callee = callee;
         this.time = timeStamp;
@@ -41,7 +43,7 @@ public abstract class CallEvent {
      * 
      * @return
      */
-    public long time() {
+    public DateTime time() {
         return time;
     }
 
@@ -51,7 +53,7 @@ public abstract class CallEvent {
         int hash = 7;
         hash = prime * hash + ((caller == null) ? 0 : caller.hashCode());
         hash = prime * hash + ((callee == null) ? 0 : callee.hashCode());
-        hash = prime * hash + (int) time;
+        hash = prime * hash + time.hashCode();
         return hash;
     }
 

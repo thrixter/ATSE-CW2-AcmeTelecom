@@ -9,13 +9,14 @@ import com.acmetelecom.customer.TariffLibrary;
 import com.acmetelecom.printing.BillGenerator;
 import com.acmetelecom.printing.HtmlPrinter;
 import com.acmetelecom.printing.UnorderedBillGenerator;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.sql.Timestamp;
 
 import static org.junit.Assert.assertEquals;
 
@@ -61,20 +62,22 @@ public class BillingSystemIntegrationTest {
     }
 
     private void setUpCalls() {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+
         // call by Fred Bloggs - Standard Price Plan
-        callLogger.callInitiated("447711232343", "447711111111", Timestamp.valueOf("2011-11-30 05:00:00").getTime());
+        callLogger.callInitiated("447711232343", "447711111111", formatter.parseDateTime("2011-11-30 05:00"));
         // wait some time
-        callLogger.callCompleted("447711232343", "447711111111", Timestamp.valueOf("2011-11-30 05:30:00").getTime());
+        callLogger.callCompleted("447711232343", "447711111111", formatter.parseDateTime(("2011-11-30 05:30")));
 
         // call by John Smith - Business Price Plan
-        callLogger.callInitiated("447722113434", "447711111111", Timestamp.valueOf("2011-11-30 14:00:00").getTime());
+        callLogger.callInitiated("447722113434", "447711111111", formatter.parseDateTime(("2011-11-30 14:00")));
         // wait some time
-        callLogger.callCompleted("447722113434", "447711111111", Timestamp.valueOf("2011-11-30 15:00:00").getTime());
+        callLogger.callCompleted("447722113434", "447711111111", formatter.parseDateTime(("2011-11-30 15:00")));
 
         // call by Jane Dixon - Leisure Price Plan
-        callLogger.callInitiated("447799555444", "447711111111", Timestamp.valueOf("2011-11-30 19:00:00").getTime());
+        callLogger.callInitiated("447799555444", "447711111111", formatter.parseDateTime(("2011-11-30 19:00")));
         // wait some time
-        callLogger.callCompleted("447799555444", "447711111111", Timestamp.valueOf("2011-11-30 20:00:00").getTime());
+        callLogger.callCompleted("447799555444", "447711111111", formatter.parseDateTime(("2011-11-30 20:00")));
     }
 
     String expectedBill = "<html>\n" +

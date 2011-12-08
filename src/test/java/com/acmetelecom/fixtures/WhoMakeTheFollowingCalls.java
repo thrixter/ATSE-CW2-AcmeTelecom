@@ -33,8 +33,8 @@ public class WhoMakeTheFollowingCalls extends ColumnFixture {
 
 	@Override
 	public void execute() throws Exception {
-        SystemUnderTest.callLogger.callInitiated(From, To, StartTime.getMillis());
-        SystemUnderTest.callLogger.callCompleted(From, To, EndTime.getMillis());
+        SystemUnderTest.callLogger.callInitiated(From, To, StartTime);
+        SystemUnderTest.callLogger.callCompleted(From, To, EndTime);
 	}
 
     @Override

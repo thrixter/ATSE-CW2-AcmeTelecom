@@ -1,6 +1,7 @@
 package com.acmetelecom.calling;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 /**
  * 
@@ -35,7 +36,8 @@ public class Call {
      * @return
      */
     public int durationSeconds() {
-        return (int) (((end.time() - start.time()) / 1000));
+        return (int) new Duration(start.time(), end.time()).getStandardSeconds();
+//        return (int) (((end.time() - start.time()) / 1000));
     }
 
     /**
@@ -43,7 +45,8 @@ public class Call {
      * @return
      */
     public String date() {
-        return new DateTime(start.time()).toString(dateFormatPattern);
+        return start.time().toString(dateFormatPattern);
+//        return new DateTime(start.time()).toString(dateFormatPattern);
     }
 
     /**
@@ -51,7 +54,7 @@ public class Call {
      * @return
      */
     public DateTime startTime() {
-        return new DateTime(start.time());
+        return start.time();
     }
 
     /**
@@ -59,7 +62,7 @@ public class Call {
      * @return
      */
     public DateTime endTime() {
-        return new DateTime(end.time());
+        return end.time();
     }
 
     public int hashCode() {

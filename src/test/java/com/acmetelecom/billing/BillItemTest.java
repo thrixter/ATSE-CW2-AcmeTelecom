@@ -3,11 +3,13 @@ package com.acmetelecom.billing;
 import com.acmetelecom.calling.Call;
 import com.acmetelecom.calling.CallEnd;
 import com.acmetelecom.calling.CallStart;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -27,10 +29,12 @@ public class BillItemTest {
 
     @Before
     public void setUpCall() {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+
         String caller = "1";
         String callee = "2";
-        long startTime = Timestamp.valueOf("2011-11-30 11:30:00").getTime();
-        long endTime = Timestamp.valueOf("2011-11-30 12:00:00").getTime();
+        DateTime startTime = formatter.parseDateTime("2011-11-30 11:30");
+        DateTime endTime = formatter.parseDateTime("2011-11-30 12:00");
 
         call = new Call(
                 new CallStart(caller, callee, startTime),

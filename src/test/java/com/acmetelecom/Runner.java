@@ -1,17 +1,20 @@
 package com.acmetelecom;
 
 import com.acmetelecom.billing.BillCalculator;
+import com.acmetelecom.billing.BillingSystem;
 import com.acmetelecom.billing.DaytimePeakPeriod;
 import com.acmetelecom.billing.FixedRateBillCalulator;
-import com.acmetelecom.printing.BillGenerator;
-import com.acmetelecom.billing.BillingSystem;
 import com.acmetelecom.calling.CallLogger;
 import com.acmetelecom.calling.SyncCallLogger;
-import com.acmetelecom.customer.*;
+import com.acmetelecom.customer.CentralCustomerDatabase;
+import com.acmetelecom.customer.CentralTariffDatabase;
+import com.acmetelecom.customer.CustomerDatabase;
+import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.printing.BillGenerator;
 import com.acmetelecom.printing.HtmlPrinter;
 import com.acmetelecom.printing.UnorderedBillGenerator;
-
-import java.sql.Timestamp;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * User: javad
@@ -36,11 +39,13 @@ public class Runner {
         BillingSystem billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
         billingSystem.setBillCalculator(billCalculator);
 
-        callLogger.callInitiated("447722113434", "447766814143", Timestamp.valueOf("2011-11-30 05:00:00").getTime());
-        callLogger.callCompleted("447722113434", "447766814143", Timestamp.valueOf("2011-11-30 06:00:00").getTime());
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
 
-        callLogger.callInitiated("447722113434", "447777765432", Timestamp.valueOf("2011-11-30 04:00:00").getTime());
-        callLogger.callCompleted("447722113434", "447777765432", Timestamp.valueOf("2011-11-30 04:30:00").getTime());
+        callLogger.callInitiated("447722113434", "447766814143", formatter.parseDateTime("2011-11-30 05:00:00"));
+        callLogger.callCompleted("447722113434", "447766814143", formatter.parseDateTime("2011-11-30 06:00:00"));
+
+        callLogger.callInitiated("447722113434", "447777765432", formatter.parseDateTime("2011-11-30 04:00:00"));;
+        callLogger.callCompleted("447722113434", "447777765432", formatter.parseDateTime("2011-11-30 05:00:00"));
 
         /*callLogger.callInitiated("447722113434", "447766814143", System.currentTimeMillis());
         sleepSeconds(20);

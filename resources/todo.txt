@@ -1,59 +1,6 @@
 concentrate on understanding where rule is defined in existing system
 add main method and run application
 
-needs refactoring in order to be able to sense values, inject customers/calls and remove dependency on current time (brittle tests)
-create seam/inject it, but don't want to do that without refactoring code before writing test,
-so change it so the code always uses a fixed time, write unit tests for safety net, refactor time out and use mock for tests
-acceptance tests done against real database, need to use DI and mock implementation so get predictable tests
-verify requirements with user, bridge communication gap using Cucumber
-once verified existing code is actually working, can almost 'discard' those tests and create acceptance tests for new behaviour
-when is the deadline for this new regulation? assumption that is at cw submission deadline
-implement new rule, make sure this requirement is met first, don't throw away existing code!
-then concentrate on refactoring design for extensibility under safety of
-
-Acceptance Tests
-	gather requirements from user
-	fit/cucumber tests
-TDD
-	introduce seams,
-	unit tests, (EMMA code coverage)
-Object-Oriented
-	objects have roles
-	tell, don't ask
-	mock objects (mockito)
-	Ports and Adapters
-DSL?
-	domain driven
-	fluent interface
-	guide the API user
-layering (structure 101)
-	interfaces for abstractions
-	abstract server/client
-	interface segregation principle
-dependency injection (google guice)
-	handling singletons
-	frameworks?
-developing under pressure
-	iterative development
-	requirements analysis and design
-	develop a feature at a time (vertical slice)
-	extend with extra functionality (horizontal slice)
-deployment/release
-	continuous integration (jenkins)
-	continuous deployment after implementing basic requirements
-	blue/green, canary, split test, (production parallel)
-
-jbehave
-jenkins/cucumber on micro EC2 instance
-build and dependency management using buildr/gradle
-build management using or gant
-issue tracking tools e.g. JIRA
-adding a UI or designing bills e.g. balsamiq mockups
-
-different way of showing the bill/receipt
-rules could change in the future
-use JodaTime
-
 
 off-peak charges (pence/minute):
 business: 0.18
@@ -65,12 +12,6 @@ business: 0.18
 leisure: 0.48
 standard: 0.30
 
-bill shows how portion of call was charged
-from 7th hour onwards changes tariff
-still using existing peak off-peak function
-order calls by start time then duration on the bill!
-acceptance tests across call plans use the same call times (control/fairness/clearness)
-query table for call costs, split per customer
 test 0.04 seconds, currently not charged
 
 wrote a nearly end-to-end FitNesse test
@@ -79,7 +20,8 @@ fixed the times!
 failed on jenkins due to newline char being different, so disabled it on CI, but still passed locally
 introduced seam, changed so that call time could be injected into call event, able to test
 gets tariff for each customer inside call loop, inefficient, call it from outside
-injected billgenerator
+injected billgenerator interface, different way of showing the bill/receipt
+order calls by start time then duration on the bill! BillGenerator purpose, e.g. grouping, shows how portion of call was charged
 created new test using mocking of billgenerator, customerdb, tarifflib
 billgenerator does not need string totalBill as lineitems has this already! move calc total bill to billgenerator
 still use callinit and call complete, still with fixed times
@@ -89,11 +31,11 @@ broke up createBillForCustomer into a number of methods such as getCallsFor(cust
 introduce CallLogger with getCallsFor(customer)
 noticed calls are synchronous, system doesn't allow simultaneous calls, need to check requirements but kept behaviour the same, added test to check this
 callLogger injected into BillingSystem, e.g. can have async call logger
-separate out BillCalculator
+separate out BillCalculator, rules could change in the future
 tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
 add Fixed (old requirements) and Variable (new requirements) calculator
 changed daytimepeakperiod to return datetime of next peak time change
-peakperiod logic unchanged, injected into calculator
+peakperiod logic unchanged, still using existing peak off-peak function, injected into calculator
 BillCalculator use setter injection and default to variable rate!
 refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
 billgenerator not ordered, check requirements with user
@@ -108,7 +50,9 @@ ports and adapters, especially around the customer and tariff db!!
 CallEvent map?
 
 
+use JodaTime
 for DSLs we used mockito, joda time, hamcrest, our own, suggest one for query CallLogger
 =======
 findbugs
 jdepend?
+jbehave

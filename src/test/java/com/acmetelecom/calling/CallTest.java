@@ -1,9 +1,10 @@
 package com.acmetelecom.calling;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.Timestamp;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -25,8 +26,10 @@ public class CallTest {
     public void setUpCall() {
         String caller = "1";
         String callee = "2";
-        long startTime = Timestamp.valueOf("2011-11-30 11:30:00").getTime();
-        long endTime = Timestamp.valueOf("2011-11-30 12:00:00").getTime();
+
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        DateTime startTime = formatter.parseDateTime("2011-11-30 11:30");
+        DateTime endTime = formatter.parseDateTime("2011-11-30 12:00");
 
         callStart = new CallStart(caller, callee, startTime);
         callEnd = new CallEnd(caller, callee, endTime);
@@ -75,8 +78,8 @@ public class CallTest {
 
     @Test
     public void testCallWithEmptyDataIsNotEqual() {
-        CallStart otherStart = new CallStart(null, null, 0);
-        CallEnd otherEnd = new CallEnd(null, null, 0);
+        CallStart otherStart = new CallStart(null, null, null);
+        CallEnd otherEnd = new CallEnd(null, null, null);
         Call otherCall = new Call(otherStart, otherEnd);
 
         assertNotEqualTo(call, otherCall);
@@ -84,7 +87,7 @@ public class CallTest {
 
     @Test
     public void testCallWithDifferentStartIsNotEqual() {
-        CallStart otherStart = new CallStart("1", "3", 5);
+        CallStart otherStart = new CallStart("1", "3", null);
         Call otherCall = new Call(otherStart, callEnd);
 
         assertNotEqualTo(call, otherCall);
@@ -92,7 +95,7 @@ public class CallTest {
 
     @Test
     public void testCallWithDifferentEndIsNotEqual() {
-        CallEnd otherEnd = new CallEnd("1", "3", 5);
+        CallEnd otherEnd = new CallEnd("1", "3", null);
         Call otherCall = new Call(callStart, otherEnd);
 
         assertNotEqualTo(call, otherCall);

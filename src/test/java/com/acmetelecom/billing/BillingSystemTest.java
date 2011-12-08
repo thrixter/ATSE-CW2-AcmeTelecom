@@ -1,19 +1,21 @@
 package com.acmetelecom.billing;
 
-import com.acmetelecom.printing.BillGenerator;
 import com.acmetelecom.calling.*;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.printing.BillGenerator;
 import com.acmetelecom.printing.LineItem;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,9 +58,10 @@ public class BillingSystemTest {
 
     @Test
     public void testCustomerBillIsGeneratedForACall() {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
 
-        long startTime = Timestamp.valueOf("2011-11-29 15:00:00").getTime();
-        long endTime = Timestamp.valueOf("2011-11-29 15:01:00").getTime();
+        DateTime startTime = formatter.parseDateTime("2011-11-29 15:00");
+        DateTime endTime = formatter.parseDateTime("2011-11-29 15:01");
 
         callLogger.callInitiated("447722113434", "447777765432", startTime);
         callLogger.callCompleted("447722113434", "447777765432", endTime);

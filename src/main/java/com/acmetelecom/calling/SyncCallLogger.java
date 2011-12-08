@@ -1,6 +1,7 @@
 package com.acmetelecom.calling;
 
 import com.acmetelecom.customer.Customer;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,12 @@ public class SyncCallLogger implements CallLogger {
        callLog = new ArrayList<CallEvent>();
     }
 
-    public void callInitiated(String caller, String callee, long timestamp) {
-        callLog.add(new CallStart(caller, callee, timestamp));
+    public void callInitiated(String caller, String callee, DateTime time) {
+        callLog.add(new CallStart(caller, callee, time));
     }
 
-    public void callCompleted(String caller, String callee, long timestamp) {
-        callLog.add(new CallEnd(caller, callee, timestamp));
+    public void callCompleted(String caller, String callee, DateTime time) {
+        callLog.add(new CallEnd(caller, callee, time));
     }
 
     public void clear() {

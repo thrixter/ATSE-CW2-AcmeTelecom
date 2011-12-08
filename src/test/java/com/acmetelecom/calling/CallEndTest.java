@@ -1,9 +1,10 @@
 package com.acmetelecom.calling;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.Timestamp;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -20,13 +21,14 @@ public class CallEndTest {
 
     private String caller;
     private String callee;
-    private long endTime;
+    private DateTime endTime;
 
     @Before
     public void setUpCall() {
         caller = "1";
         callee = "2";
-        endTime = Timestamp.valueOf("2011-11-30 11:30:00").getTime();
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        endTime = formatter.parseDateTime("2011-11-30 11:30");
 
         callEnd = new CallEnd(caller, callee, endTime);
     }
@@ -72,7 +74,7 @@ public class CallEndTest {
 
     @Test
     public void testCallWithEmptyDataIsNotEqual() {
-        CallEnd otherEnd = new CallEnd(null, null, 0);
+        CallEnd otherEnd = new CallEnd(null, null, null);
 
         assertNotEqualTo(callEnd, otherEnd);
     }
@@ -95,8 +97,7 @@ public class CallEndTest {
 
     @Test
     public void testCallEventWithDifferentStartTimeIsNotEqual() {
-        long otherTime = 0;
-        CallEnd otherEnd = new CallEnd(caller, callee, otherTime);
+        CallEnd otherEnd = new CallEnd(caller, callee, new DateTime());
 
         assertNotEqualTo(callEnd, otherEnd);
     }

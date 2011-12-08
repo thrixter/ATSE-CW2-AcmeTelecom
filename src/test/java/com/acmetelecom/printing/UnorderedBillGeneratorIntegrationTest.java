@@ -5,6 +5,9 @@ import com.acmetelecom.calling.Call;
 import com.acmetelecom.calling.CallEnd;
 import com.acmetelecom.calling.CallStart;
 import com.acmetelecom.customer.Customer;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -14,7 +17,6 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,8 +39,9 @@ public class UnorderedBillGeneratorIntegrationTest {
     public void setUpCustomerCalls() {
         MockitoAnnotations.initMocks(this);
 
-        long startTime = Timestamp.valueOf("2011-11-30 08:00:00").getTime();
-        long endTime = Timestamp.valueOf("2011-11-30 09:00:00").getTime();
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        DateTime startTime = formatter.parseDateTime("2011-11-30 08:00");
+        DateTime endTime = formatter.parseDateTime("2011-11-30 09:00");
 
         String callerName = "John Smith";
         String callerNumber = "447722113434";
