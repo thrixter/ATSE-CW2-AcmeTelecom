@@ -42,7 +42,6 @@ public class BillingSystemTest {
     public void setUpCustomers() {
         MockitoAnnotations.initMocks(this);
 
-        // todo: Customer factory with TinyTypes
         john = new Customer("John Smith", "447722113434", "Business");
         anne = new Customer("Anne Jones", "447777765432", "Leisure");
 
@@ -58,7 +57,6 @@ public class BillingSystemTest {
     @Test
     public void testCustomerBillIsGeneratedForACall() {
 
-        // todo: CallLogger with TinyTypes
         long startTime = Timestamp.valueOf("2011-11-29 15:00:00").getTime();
         long endTime = Timestamp.valueOf("2011-11-29 15:01:00").getTime();
 

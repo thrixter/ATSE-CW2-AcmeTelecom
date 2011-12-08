@@ -11,6 +11,7 @@ public class GenerateBillForCustomers extends Fixture {
 
     @Override
     public void doTable(Parse table) {
+        SystemUnderTest.billingSystem.createCustomerBills();
         super.doTable(table);
     }
 }

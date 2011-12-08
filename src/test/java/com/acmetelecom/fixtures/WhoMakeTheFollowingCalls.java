@@ -2,6 +2,9 @@ package com.acmetelecom.fixtures;
 
 import fit.ColumnFixture;
 import fit.Parse;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * User: javad
@@ -11,12 +14,12 @@ public class WhoMakeTheFollowingCalls extends ColumnFixture {
 
     public String From;
     public String To;
-    public String StartTime;
-    public String EndTime;
+    public DateTime StartTime;
+    public DateTime EndTime;
 
     @Override
 	public void doRows(Parse rows) {
-//		SystemUnderTest.reset();
+        SystemUnderTest.callLogger.clear();
 		super.doRows(rows);
 	}
 
@@ -30,8 +33,17 @@ public class WhoMakeTheFollowingCalls extends ColumnFixture {
 
 	@Override
 	public void execute() throws Exception {
-//		SystemUnderTest.billingSystem.callInitiated(caller, callee);
-//        SystemUnderTest.billingSystem.callCompleted(caller, callee);
+        SystemUnderTest.callLogger.callInitiated(From, To, StartTime.getMillis());
+        SystemUnderTest.callLogger.callCompleted(From, To, EndTime.getMillis());
 	}
 
+    @Override
+    public Object parse(String s, Class<?> type) throws Exception {
+		if(type == DateTime.class) {
+			DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+            return DateTime.parse(s, format);
+		}
+		return super.parse(s, type);
+	}
+    
 }

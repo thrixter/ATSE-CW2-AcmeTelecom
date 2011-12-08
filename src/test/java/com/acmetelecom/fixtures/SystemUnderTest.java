@@ -1,18 +1,19 @@
 package com.acmetelecom.fixtures;
 
 import com.acmetelecom.billing.BillCalculator;
-import com.acmetelecom.billing.DaytimePeakPeriod;
-import com.acmetelecom.billing.FixedRateBillCalulator;
 import com.acmetelecom.billing.BillingSystem;
+import com.acmetelecom.billing.DaytimePeakPeriod;
+import com.acmetelecom.billing.VariableRateBillCalculator;
 import com.acmetelecom.calling.CallLogger;
-import com.acmetelecom.calling.SyncCallLogger;
-import com.acmetelecom.customer.CentralCustomerDatabase;
 import com.acmetelecom.customer.CentralTariffDatabase;
+import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.fixtures.fakes.*;
 import com.acmetelecom.printing.BillGenerator;
-import com.acmetelecom.printing.HtmlPrinter;
-import com.acmetelecom.printing.UnorderedBillGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: javad
@@ -20,20 +21,15 @@ import com.acmetelecom.printing.UnorderedBillGenerator;
  */
 public class SystemUnderTest {
 
-    public static BillingSystem billingSystem;
 
-    static {
-        reset();
-    }
+    static CallLogger callLogger = new FakeCallLogger();
+    static List<Customer> customers = new ArrayList<Customer>();
+    static FakePrinter printer = new FakePrinter();
+    private static CustomerDatabase customerDatabase = new FakeCustomerDatabase(customers);
+    private static TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
+    private static BillCalculator billCalculator = new VariableRateBillCalculator(new DaytimePeakPeriod());
+    private static BillGenerator billGenerator = new FakeBillGenerator(printer);
 
-    public static void reset() {
-        CallLogger callLogger = new SyncCallLogger();
-        CustomerDatabase customerDatabase = CentralCustomerDatabase.getInstance();
-        TariffLibrary tariffDatabase = CentralTariffDatabase.getInstance();
-        BillCalculator billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
-        BillGenerator billGenerator = new UnorderedBillGenerator(HtmlPrinter.getInstance());
-
-        billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billCalculator, billGenerator);
-    }
-
+    static BillingSystem billingSystem = new BillingSystem(callLogger,
+            customerDatabase, tariffDatabase, billCalculator, billGenerator);
 }

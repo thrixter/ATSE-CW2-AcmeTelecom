@@ -1,7 +1,6 @@
 concentrate on understanding where rule is defined in existing system
 add main method and run application
-write acceptance test for existing behaviour, ensures that using latest working code base
-code not written with testing in mind, can't wire up acceptance tests easily/correctly
+
 needs refactoring in order to be able to sense values, inject customers/calls and remove dependency on current time (brittle tests)
 create seam/inject it, but don't want to do that without refactoring code before writing test,
 so change it so the code always uses a fixed time, write unit tests for safety net, refactor time out and use mock for tests
@@ -94,12 +93,12 @@ separate out BillCalculator
 tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
 add Fixed (old requirements) and Variable (new requirements) calculator
 peakperiod logic unchanged, injected into calculator
-// todo: BillCalculator use setter injection and default to variable rate!
+todo: BillCalculator use setter injection and default to variable rate!
 refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
 billgenerator not ordered, check requirements with user
 integration test for BillGenerator used HtmlPrinter, again redirect sysout, refactored to inject dependency, removed the totalCost argument
-Customer builder with tinytypes for firstname, lastname, number
-CallEvent builder with tinytypes
+todo: Customer builder with tinytypes for firstname, lastname, number
+todo: CallEvent builder with tinytypes
 
 findbugs
 jdepend?

@@ -4,5 +4,6 @@
 
 !path ../lib/external.jar
 !path ../lib/fitnesse.jar
+!path /Users/javad/.gradle/caches/artifacts-4/joda-time/joda-time/c12498cf18507aa6433a94eb7d3e77d5/jars/joda-time-2.0.jar
 !path ../build/classes/main
 !path ../build/classes/test

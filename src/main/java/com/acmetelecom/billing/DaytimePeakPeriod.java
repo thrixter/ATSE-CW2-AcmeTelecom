@@ -17,19 +17,17 @@ public class DaytimePeakPeriod {
     }
 
     public DateTime nextPeakChange(DateTime currentTime) {
-        int delta = 0;
-        int hour = peakStart;
+        DateTime next = new DateTime(currentTime);
+        int hour;
+
         if (offPeak(currentTime)) {
-            if(currentTime.getHourOfDay() > peakStart) {
-                delta = 1;
+            hour = peakStart;
+            if (currentTime.getHourOfDay() > offPeakStart) {
+                next = currentTime.plusDays(1);
             }
         } else {
             hour = offPeakStart;
         }
-        DateTime next = new DateTime(currentTime).plus(delta);
-        next = next.hourOfDay().setCopy(hour);
-        next = next.minuteOfHour().setCopy(0);
-        next = next.secondOfMinute().setCopy(0);
-        return next;
+        return next.withTime(hour, 0, 0, 0);
     }
 }

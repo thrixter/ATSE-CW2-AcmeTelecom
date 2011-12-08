@@ -1,5 +1,6 @@
 package com.acmetelecom.fixtures;
 
+import com.acmetelecom.customer.Customer;
 import fit.ColumnFixture;
 import fit.Parse;
 
@@ -15,7 +16,7 @@ public class CustomersWithTheFollowingPricePlans extends ColumnFixture {
 
     @Override
 	public void doRows(Parse rows) {
-//		SystemUnderTest.reset();
+        SystemUnderTest.customers.clear();
 		super.doRows(rows);
 	}
 
@@ -24,12 +25,13 @@ public class CustomersWithTheFollowingPricePlans extends ColumnFixture {
 		Name = null;
         Number = null;
         PricePlan = null;
+        super.reset();
 	}
 
 	@Override
 	public void execute() throws Exception {
-//		SystemUnderTest.billingSystem.callInitiated(caller, callee);
-//        SystemUnderTest.billingSystem.callCompleted(caller, callee);
+        SystemUnderTest.customers.add(new Customer(Name, Number, PricePlan));
+        super.execute();
 	}
 
 }

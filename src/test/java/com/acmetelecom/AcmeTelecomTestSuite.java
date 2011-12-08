@@ -1,9 +1,6 @@
 package com.acmetelecom;
 
-import com.acmetelecom.billing.BillItemTest;
-import com.acmetelecom.billing.BillingSystemTest;
-import com.acmetelecom.billing.FixedRateBillCalculatorTest;
-import com.acmetelecom.billing.VariableRateBillCalculatorTest;
+import com.acmetelecom.billing.*;
 import com.acmetelecom.calling.CallEndTest;
 import com.acmetelecom.calling.CallStartTest;
 import com.acmetelecom.calling.CallTest;
@@ -20,6 +17,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         BillingSystemTest.class,
         SyncCallLoggerTest.class,
+        DaytimePeakPeriodTest.class,
         FixedRateBillCalculatorTest.class,
         VariableRateBillCalculatorTest.class,
         BillItemTest.class,
