@@ -40,7 +40,7 @@ public class WhoMakeTheFollowingCalls extends ColumnFixture {
     @Override
     public Object parse(String s, Class<?> type) throws Exception {
 		if(type == DateTime.class) {
-			DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter format = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
             return DateTime.parse(s, format);
 		}
 		return super.parse(s, type);

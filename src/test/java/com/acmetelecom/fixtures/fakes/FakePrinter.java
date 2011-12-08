@@ -32,4 +32,8 @@ public class FakePrinter {
     public List<BillRow> getRows() {
         return billRows;
     }
+
+    public void clear() {
+        billRows.clear();
+    }
 }

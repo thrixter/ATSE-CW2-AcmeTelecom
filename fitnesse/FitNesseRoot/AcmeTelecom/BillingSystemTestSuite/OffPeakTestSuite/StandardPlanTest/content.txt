@@ -9,7 +9,7 @@
 
 | '''Who make the following calls''' |
 | !-From-! | !-To-! | !-Start Time-! | !-End Time-! |
-| !-Anne Jones-! | !-Jane Dixon-! | !-2011-11-29 23:30-! | !-2011-11-30 01:00-! |
+| !-447777765432-! | !-447799555444-! | !-29/11/11 23:30-! | !-30/11/11 01:00-! |
 *!
 
 !* When
@@ -19,6 +19,6 @@
 !* Then
 | '''The Bill Shows''' |
 | !-Caller Name-! | !-Caller Number-! | !-Price Plan-! | !-Called Number-! | !-Call Time-! | !-Duration-! | !-Cost-! |
-| !-Anne Jones-! | !-447777765432-! | !-Standard-! | !-447799555444-! | !-2011-11-29 23:30-! | !-1:30-! | !--! |
+| !-Anne Jones-! | !-447777765432-! | !-Standard-! | !-447799555444-! | !-29/11/11 23:30-! | !-90:00-! | !--! |
 
 *!
