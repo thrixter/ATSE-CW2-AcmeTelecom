@@ -18,11 +18,16 @@ We quickly learned there was no documentation present (formal, tests or code com
 We began by implementing a Runner class with a main method to exercise various functionality within the system. The initial workload was split between the group into writing acceptance tests using the FitNesse framework, writing integration tests with JUnit and setting up a developer workflow including build and dependency management as well as a continuous integration server.
 
 We assumed that the deadline for delivering the functionality to comply with the new regulations, coincides with the coursework submission deadline. Therefore our first priority was to ensure that these requirements would be met in a safe and timely manner.
-
-
+\begin{comment}
+Understanding the specified requirements.
+Reading spec
+Clarifying with client
+writing up requirement list
+New requirements.
+listening to customers and domain experts
+\end{comment}
 
 \section{Acceptance Testing}
-
 To specify the functionality of the new system we wrote acceptance tests that captured both the new requirements and the remaining, unchanged behaviour of the old system. As there was no formal specification we had to be careful that these captured the full behaviour of the system. The tests we implemented specified the following behaviour:
 
 Calls that:
@@ -60,27 +65,20 @@ public CallEnd(String caller, String callee, long timestamp) {
 }
 \end{verbatim}
 
-After making these changes we ensured that the integration test continued to pass and started implementing new functionality using Test-Driven Development (TDD).  As we broke dependencies we introduced interfaces which could be mocked and allowed for testing and verification of object interactions. We used JUnit for testing and Mockito for producing mock objects.
+After making these changes we ensured that the integration test continued to pass and started implementing new functionality using Test-Driven Development (TDD).  As we broke dependencies we introduced interfaces which could be mocked and allowed for testing and verification of object interactions. 
+
+We used JUnit for testing and Mockito for .
 
 
- Using this strategy we can have confidence in our current progress in implementing features, writing the tests themselves ensures we are always working towards the end goal, and the changes themselves are self documenting. 
-
-Three of the key class unit tests show our approach here. FixedRateBillCalculatorTest and VariableRateBillCalculatorTest calculate call cost for the old and new requirements respectively. As one would expect, each have the same test methods. Shown bellow is an example test for FixedRateBillCalculatorTest. In fact, full coverage is obtained with just three scenarios, Peak-Peak, OffPeak-OffPeak, OffPeak-Peak. We feel this validates our decision to factor the call cost calculation from the BillingSystem.
-
-\begin{verbatim}
-@Test
-    public void testCallsWithMixedPeakPeriod() {
-        CallStart callStart = new CallStart("Dan", "Javad", Timestamp.valueOf("2011-11-11 06:00:00").getTime());
-        CallEnd callEnd = new CallEnd("Dan", "Javad", Timestamp.valueOf("2011-11-11 08:00:00").getTime());
-        Call call = new Call(callStart, callEnd);
-        DaytimePeakPeriod peakPeriod = new DaytimePeakPeriod();
-        FixedRateBillCalculator billCalulator = new FixedRateBillCalculator();
-        assertTrue(billCalulator.getCallCost(Tariff.Standard, call, peakPeriod).intValue() == 3600);
-    }
-\end{verbatim}
-
-
-Naturally, the unit test for BillingSystem follows, and it possibly the most critical system component. We decided to mock most of the injection parameters to avoid uncertainty and maintain test control. An example test is shown below.
+\begin{comment}
+Important to get good code coverage and high quality tests which test edge cases such e.g. getting the time of the next off peak / peak change
+self documenting
+HAMCREST and dsl
+Requirement analysis.
+clear document of requirements filtering non essential information
+analysis
+remote debugging of fitnesss using eclipse
+\end{comment}
 
 
 \section{Refactoring}
@@ -99,6 +97,7 @@ Dependency injection frameworks (e.g. Guice or Spring) - not yet but guice
 
 http://www.natpryce.com/articles/000783.html
 we thought about 2 phone calls at the same time with the same people 
+Dependency principles.
 
 
 The structure before and after refactoring are shown below:
@@ -131,6 +130,141 @@ private void createBillFor(Customer customer, Log callLog) {
     billGenerater.generate(customer, items, totalBill);
 }
 \end{verbatim}
+\begin{comment}
+
+TODO FILE
+
+concentrate on understanding where rule is defined in existing system
+add main method and run application
+write acceptance test for existing behaviour, ensures that using latest working code base
+code not written with testing in mind, can't wire up acceptance tests easily/correctly
+needs refactoring in order to be able to sense values, inject customers/calls and remove dependency on current time (brittle tests)
+create seam/inject it, but don't want to do that without refactoring code before writing test,
+so change it so the code always uses a fixed time, write unit tests for safety net, refactor time out and use mock for tests
+acceptance tests done against real database, need to use DI and mock implementation so get predictable tests
+verify requirements with user, bridge communication gap using Cucumber
+once verified existing code is actually working, can almost 'discard' those tests and create acceptance tests for new behaviour
+when is the deadline for this new regulation? assumption that is at cw submission deadline
+implement new rule, make sure this requirement is met first, don't throw away existing code!
+then concentrate on refactoring design for extensibility under safety of
+
+Acceptance Tests
+	gather requirements from user
+	fit/cucumber tests
+TDD
+	introduce seams,
+	unit tests, (EMMA code coverage)
+Object-Oriented
+	objects have roles
+	tell, don't ask
+	mock objects (mockito)
+	Ports and Adapters
+DSL?
+	domain driven
+	fluent interface
+	guide the API user
+layering (structure 101)
+	interfaces for abstractions
+	abstract server/client
+	interface segregation principle
+dependency injection (google guice)
+	handling singletons
+	frameworks?
+developing under pressure
+	iterative development
+	requirements analysis and design
+	develop a feature at a time (vertical slice)
+	extend with extra functionality (horizontal slice)
+deployment/release
+	continuous integration (jenkins)
+	continuous deployment after implementing basic requirements
+	blue/green, canary, split test, (production parallel)
+
+jbehave
+jenkins/cucumber on micro EC2 instance
+build and dependency management using buildr/gradle
+build management using or gant
+issue tracking tools e.g. JIRA
+adding a UI or designing bills e.g. balsamiq mockups
+
+different way of showing the bill/receipt
+rules could change in the future
+use JodaTime
+
+
+off-peak charges (pence/minute):
+standard: 0.12
+business: 0.18
+leisure: 0.06
+
+peak charges (pence/minute):
+standard: 0.30
+business: 0.18
+leisure: 0.48
+
+bill shows how portion of call was charged
+from 7th hour onwards changes tariff
+still using existing peak off-peak function
+order calls by start time then duration on the bill!
+acceptance tests across call plans use the same call times (control/fairness/clearness)
+query table for call costs, split per customer
+test 0.04 seconds, currently not charged
+
+wrote a nearly end-to-end FitNesse test
+had to redirect System.out!
+fixed the times!
+failed on jenkins due to newline char being different, so disabled it on CI, but still passed locally
+introduced seam, changed so that call time could be injected into call event, able to test
+gets tariff for each customer inside call loop, inefficient, call it from outside
+injected billgenerator
+created new test using mocking of billgenerator, customerdb, tarifflib
+billgenerator does not need string totalBill as lineitems has this already! move calc total bill to billgenerator
+still use callinit and call complete, still with fixed times
+but needed to add equals and hashcode to lineitem, call, callevent for verifying billgen send, also better than comparing primitives
+added tests for equals in lineitem, call, callevent
+broke up createBillForCustomer into a number of methods such as getCallsFor(customer), calculateCostOfEachCall, calculateTotalBill, able to sense values
+introduce CallLogger with getCallsFor(customer)
+noticed calls are synchronous, system doesn't allow simultaneous calls, need to check requirements but kept behaviour the same, added test to check this
+callLogger injected into BillingSystem, e.g. can have async call logger
+separate out BillCalculator
+tests for BillCalculators only used one of the tariffs, the acceptance test cover all cases
+add Fixed (old requirements) and Variable (new requirements) calculator
+peakperiod logic unchanged, injected into calculator
+// todo: BillCalculator use setter injection and default to variable rate!
+refactored structure into three main packages (billing, calls, printing), removed cyclic dependency between billsystem and billgenerator
+billgenerator not ordered, check requirements with user
+integration test for BillGenerator used HtmlPrinter, again redirect sysout, refactored to inject dependency, removed the totalCost argument
+Customer builder with tinytypes for firstname, lastname, number
+CallEvent builder with tinytypes
+
+findbugs
+jdepend?
+
+ports and adapters, especially around the customer and tariff db!!
+CallEvent map?
+
+
+for DSLs we used mockito, joda time, hamcrest, our own, suggest one for query CallLogger
+=======
+findbugs
+jdepend?
+
+
+The current code was an unorganised Ôbig ball of mudÕ that had many cyclic dependencies meaning that adding functionality requires changing code across multiple classes making it difficult to prevent errors and test rigorously. Another issue is that the code was not organised into packages...So prior to adding the new functionality we organised the classes into packages then analysed the current code using structure 101 to locate these cyclic dependencies. We obtained the following graph:
+
+
+The risk is that the code becomes a Ôbig ball of mudÕ that is difficult to understand. Extending such as system requires that many classes and test be modified across multiple packages.
+
+The requirements we were given meant that vertical slicing was not plausible as we essentially only needed to modify the implementation of one horizontal slice. However
+Domain Specific Languages.
+Dependency inversion: abstract client and abstract server (in code refactoring)
+Dependency injection
+Modularity and Layering.
+The top of a hierarchy can be easily changed as there arenÕt any incoming dependencies.
+Slicing
+vertical slicing??? - not really relevant
+
+\end{comment}
 
 
 %Diagram after
@@ -168,103 +302,41 @@ We made us of a new function "nextPeakChange" which given a time, returns the fo
 
 The code works by starting from the beginning of the call and adding the number of seconds between the current time and the next boundary to either th5e off peak duration or on peak duration. It then continues to do this from the previous boundary until the end. This function has a complexity of O(k) where k is the number of boundaries. As we can assume no conversation lasts over 24 hours, we will only loop at most 3 times.
 
-
-%Anything else you did
-\section{Release Cycle}
-We used a continuous deployment style release cycle; we committed changes to a repository once associated test procedure had passed. We used Jenkins to help manage testing, verifying when a commit was appropriate, this allowed us to gradually increase code coverage and maintain a steady deployment. 
-
-CI with
-Emma code coverage
-Unit testing
-Running fit testing using Fitnesse
-
-%\section{Something else}
-
-% Managing future improvements
-\section{Potential Improvements}
-Concurrent calls.
-Call ordering on bill. 
-
-
-
 \begin{comment}
-Key points to talk about: (Not covered, Covered)
-TD.
-build tests prior to development
-avoiding brittle tests
-self documenting
-OO Design.
-Mocking.
-Unit Testing.
-Domain Specific Languages.
-Dependency principles.
-Dependency inversion: abstract client and abstract server (in code refactoring)
-Dependency injection
-Modularity and Layering.
-The top of a hierarchy can be easily changed as there arenÕt any incoming dependencies.
-Requirement analysis.
-listening to customers and domain experts
-clear document of requirements filtering non essential information
-analysis
-Developing under pressure.
-Slicing
-vertical slicing??? - not really relevant
-Momentum. - stupid
-Understanding the specified requirements.
-Reading spec
-Clarifying with client
-writing up requirement list - emitting shit
-New requirements.
-Release strategy/cycle.
-Version control.
-using git
-Continuous deployment. - irrelevant?
-Continuous integration
-
-
-
-c) refactored the existing code in order to achieve the above
-
-The current code was an unorganised Ôbig ball of mudÕ that had many cyclic dependencies meaning that adding functionality requires changing code across multiple classes making it difficult to prevent errors and test rigorously. Another issue is that the code was not organised into packages...So prior to adding the new functionality we organised the classes into packages then analysed the current code using structure 101 to locate these cyclic dependencies. We obtained the following graph:
-
-
-The risk is that the code becomes a Ôbig ball of mudÕ that is difficult to understand. Extending such as system requires that many classes and test be modified across multiple packages.
-
-
-d) wrote new code
-
 With the new organisation of the code we have seperate classes for the old and new billing methods:
 FixedRateBillCalculater and VariableRateBillCalculater so that we could have unit tests for both.
 
 Made use of Joda-Time instead of the current DateTime library as it has extra functionality.
+DSL JODA TIME + mockito AND HAMCREST
 
 Once the code was refactored, we simply needed to implement one function in the FixedRateBillCalculater (all the logic in the same place)			
 does the minute at the peak boundary count as on peak or off peak
-
-e) anything else you did
-
-
-
-
-release cycle: added functionality, once it passed tests we comited and released.
-
-Once we implemented the new functionality of the code correctly, with all jenkins tests passing, we then released the code. From this point on, we could regularly release refactored code providing it doesnÕt prevent any of the tests from working. This regular releasing simplifies the releasing process as we will not risk encountering too many errors during one release.
-
-As we worked  in a team of four to develop the new functionality and refactor the code, it was important for us to make use of version control. We made use of GitHub, talk about rebase and shit.
-
-The requirements we were given meant that vertical slicing was not plausible as we essentially only needed to modify the implementation of one horizontal slice. However
-
-
-
-f) how would you manage adding further features to this code in future 
-		
-	
-DSL JODA TIME AND HAMCREST
-nice examples of when to 
-
-
-gen call for bill that hasnt endend
 \end{comment}
 
+%Anything else you did
+\section{Development Process}
+We used the GIT distributed version control system to allow our team to effectively collaborate on the same code, hosting our repository on Github as they offer a reliable service and free accounts for students. Using a free micro instance on Amazons Elastic Compute Cloud (EC2) we set up the free Jenkins Continuous Integration (CI) system. Every commit to git would trigger Github's post web hooks, alerting Jenkins that there had been a commit. Jenkins would then checkout the code, build it, run the acceptance tests using FitNesse, integration tests and unit tests using JUnit, and generate code coverage with EMMA. Every time the build status changed, i.e. a successful build after a failed build of a failed build after a successful build, and email would be sent to the group as a warning. We could also see the status of the builds of all commits along with their code coverage and test statueUsing continuous integration enabled the group to track our progress towards a system with full code coverage and then ensure that we maintained the coverage as we made changes. Utilising CI added momentum to the development process as we all wanted full code coverage and to keep the build green. Below is a screenshot of the project page on Jenkins web interface with testing and code coverage graphs.
+
+Once we implemented the new functionality of the code correctly, with all Jenkins tests passing, we then released the code. From this point on, we could regularly release refactored code providing it doesn't prevent any of the tests from working. This regular releasing simplifies the releasing process as we will not risk encountering too many errors during one release.
+As we worked  in a team of four to develop the new functionality and refactor the code, it was important for us to make use of version control.
+
+\includegraphics[scale=0.4]{images/jenkins_project.png}
+
+
+% Release strategy / cycle
+%gradle java plugin idea plugin emma plugin > maven and ant
+
+%Developing under pressure.
+
+%\section{Something else}
+
+% Managing future improvements
+\section{Future Improvements}
+Managing future improvements
+Concurrent calls.
+Call ordering on bill. 
+Extend continuous integration to allow continuous deployment.
+nice examples of when to 
+gen call for bill that hasn't endend
 
 \end{document}

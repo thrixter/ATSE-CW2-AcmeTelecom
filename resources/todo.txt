@@ -10,13 +10,13 @@ verify requirements with user, bridge communication gap using Cucumber
 once verified existing code is actually working, can almost 'discard' those tests and create acceptance tests for new behaviour
 when is the deadline for this new regulation? assumption that is at cw submission deadline
 implement new rule, make sure this requirement is met first, don't throw away existing code!
-then concentrate on refactoring design for extensibility under safety of 
+then concentrate on refactoring design for extensibility under safety of
 
 Acceptance Tests
 	gather requirements from user
 	fit/cucumber tests
 TDD
-	introduce seams, 
+	introduce seams,
 	unit tests, (EMMA code coverage)
 Object-Oriented
 	objects have roles
@@ -53,7 +53,7 @@ adding a UI or designing bills e.g. balsamiq mockups
 
 different way of showing the bill/receipt
 rules could change in the future
-negative time?? use JodaTime
+use JodaTime
 
 
 off-peak charges (pence/minute):
@@ -109,3 +109,6 @@ CallEvent map?
 
 
 for DSLs we used mockito, joda time, hamcrest, our own, suggest one for query CallLogger
+=======
+findbugs
+jdepend?
