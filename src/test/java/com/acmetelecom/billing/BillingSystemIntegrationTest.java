@@ -37,7 +37,7 @@ public class BillingSystemIntegrationTest {
     public void testBillingSystem() {
 
         billingSystem.setBillCalculator(
-                new FixedRateBillCalulator(new DaytimePeakPeriod())
+                new FixedRateBillCalculator(new DaytimePeakPeriod())
         );
 
         setUpCalls();

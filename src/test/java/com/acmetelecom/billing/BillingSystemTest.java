@@ -51,7 +51,7 @@ public class BillingSystemTest {
         when(tariffDatabase.tarriffFor(john)).thenReturn(tariff);
 
         callLogger = new SyncCallLogger();
-        billCalculator = new FixedRateBillCalulator(new DaytimePeakPeriod());
+        billCalculator = new FixedRateBillCalculator(new DaytimePeakPeriod());
 
         billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
     }

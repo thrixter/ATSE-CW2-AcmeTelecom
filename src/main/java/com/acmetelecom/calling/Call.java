@@ -14,7 +14,7 @@ public class Call {
     private CallEvent end;
 
     /**
-     * 
+     *
      * @param start
      * @param end
      */
@@ -85,4 +85,6 @@ public class Call {
 		}
 		return false;
 	}
+
+    private class InvalidCallTimeException extends Throwable {}
 }

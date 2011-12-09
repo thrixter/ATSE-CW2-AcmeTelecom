@@ -11,16 +11,20 @@ public class DaytimePeakPeriod {
     final short peakStart = 7;
     final short offPeakStart = 19;
 
-    public boolean offPeak(DateTime time) {
-        int hour = time.getHourOfDay();
-        return hour < peakStart || hour >= offPeakStart;
+    public boolean isOffPeak(DateTime time) {
+        return time.getHourOfDay() < peakStart
+                || time.getHourOfDay() >= offPeakStart;
+    }
+
+    public boolean isPeak(DateTime time) {
+        return !this.isOffPeak(time);
     }
 
     public DateTime nextPeakChange(DateTime currentTime) {
         DateTime next = new DateTime(currentTime);
         int hour;
 
-        if (offPeak(currentTime)) {
+        if (isOffPeak(currentTime)) {
             hour = peakStart;
             if (currentTime.getHourOfDay() >= offPeakStart) {
                 next = currentTime.plusDays(1);
@@ -28,6 +32,7 @@ public class DaytimePeakPeriod {
         } else {
             hour = offPeakStart;
         }
+
         return next.withTime(hour, 0, 0, 0);
     }
 }
