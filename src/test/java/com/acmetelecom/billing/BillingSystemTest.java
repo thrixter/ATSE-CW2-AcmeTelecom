@@ -54,6 +54,8 @@ public class BillingSystemTest {
         billCalculator = new FixedRateBillCalculator(new DaytimePeakPeriod());
 
         billingSystem = new BillingSystem(callLogger, customerDatabase, tariffDatabase, billGenerator);
+
+        billingSystem.setBillCalculator(new VariableRateBillCalculator(new DaytimePeakPeriod()));
     }
 
     @Test

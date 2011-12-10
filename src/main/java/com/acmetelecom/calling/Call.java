@@ -86,5 +86,4 @@ public class Call {
 		return false;
 	}
 
-    private class InvalidCallTimeException extends Throwable {}
 }

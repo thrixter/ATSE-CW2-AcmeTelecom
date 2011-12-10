@@ -16,7 +16,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         BillingSystemTest.class,
-        SyncCallLoggerTest.class,
         DaytimePeakPeriodTest.class,
         FixedRateBillCalculatorTest.class,
         VariableRateBillCalculatorTest.class,
@@ -24,6 +23,7 @@ import org.junit.runners.Suite;
         CallTest.class,
         CallStartTest.class,
         CallEndTest.class,
+        SyncCallLoggerTest.class,
         UnorderedBillGeneratorTest.class
 })
 public class AcmeTelecomTestSuite {}
